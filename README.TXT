@@ -4,9 +4,8 @@ Tell the reader (someone who does not know anything about this project)
 all he/she needs to know. The comments should usually include at least:
 ------------------------------------------------------------------------
 
-PROJECT TITLE:
-PURPOSE OF PROJECT:
-VERSION or DATE:
-HOW TO START THIS PROJECT:
-AUTHORS:
-USER INSTRUCTIONS:
+Título del proyecto: Furniture Factory
+Propósito: Ejercicio práctico para la asignatura de Programación Orientada a Objetos del Grado en Ingeniería Informática
+VERSION:  1 
+Fecha: Iniciado el 26/07/2020
+AUTOR: Marcos Laíño
