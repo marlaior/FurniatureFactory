@@ -2,7 +2,7 @@ package Personas;
 
 
 /**
- * Clase que describe objetos de la clase ClientePersona.
+ * Clase que describe objetos de tipo ClientePersona.
  * Esta clase hereda de Cliente.
  * 
  * @author Marcos Laíño Ordóñez. 

@@ -2,7 +2,7 @@ package Personas;
 
 
 /**
- * Clase que describe objetos de la clase ArtesanoEnPlantilla.
+ * Clase que describe objetos de tipo ArtesanoEnPlantilla.
  * Esta clase hereda de Artesano.
  * 
  * @author Marcos Laíño Ordóñez. 

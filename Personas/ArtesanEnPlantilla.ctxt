@@ -1,4 +1,4 @@
 #BlueJ class context
 comment0.target=ArtesanEnPlantilla
-comment0.text=\r\n\ Clase\ que\ describe\ objetos\ de\ la\ clase\ ArtesanoEnPlantilla.\r\n\ Esta\ clase\ hereda\ de\ Artesano.\r\n\ \r\n\ @author\ Marcos\ La\u00ED\u00F1o\ Ord\u00F3\u00F1ez.\ \r\n
+comment0.text=\r\n\ Clase\ que\ describe\ objetos\ de\ tipo\ ArtesanoEnPlantilla.\r\n\ Esta\ clase\ hereda\ de\ Artesano.\r\n\ \r\n\ @author\ Marcos\ La\u00ED\u00F1o\ Ord\u00F3\u00F1ez.\ \r\n
 numComments=1

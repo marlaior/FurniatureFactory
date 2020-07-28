@@ -2,7 +2,7 @@ package Personas;
 
 
 /**
- * Clase que describe objetos de la clase Comercial.
+ * Clase que describe objetos de tipo Comercial.
  * Esta clase hereda de Empleado.
  * 
  * @author Marcos Laíño Ordóñez. 

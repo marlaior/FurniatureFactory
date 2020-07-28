@@ -2,7 +2,7 @@ package Personas;
 
 
 /**
- * Clase que describe objetos de la clase ArtesanoPorHoras.
+ * Clase que describe objetos de tipo ArtesanoPorHoras.
  * Esta clase hereda de Artesano.
  * 
  * @author Marcos Laíño Ordóñez. 
