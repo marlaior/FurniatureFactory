@@ -1,4 +1,4 @@
-package Muebles;
+package muebles;
 
 
 /**

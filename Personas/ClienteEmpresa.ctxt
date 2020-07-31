@@ -1,4 +1,15 @@
 #BlueJ class context
 comment0.target=ClienteEmpresa
 comment0.text=\r\n\ Clase\ que\ describe\ objetos\ de\ tipo\ ClienteEmpresa.\r\n\ Esta\ clase\ hereda\ de\ Cliente.\r\n\ \r\n\ @author\ Marcos\ La\u00ED\u00F1o\ Ord\u00F3\u00F1ez.\ \r\n
-numComments=1
+comment1.params=usuario\ contrase\u00F1a\ nombre\ telefono\ nif\ comercial\ nombreContactoEmpresa
+comment1.target=ClienteEmpresa(java.lang.String,\ java.lang.String,\ java.lang.String,\ java.lang.String,\ java.lang.String,\ Comercial,\ java.lang.String)
+comment1.text=\r\n\ Constructor\ de\ la\ clase\ ClienteEmpresa\r\n
+comment2.params=descuento
+comment2.target=void\ setDescuento(int)
+comment3.params=nombreContactoEmpresa
+comment3.target=void\ nombreContactoEmpresa(java.lang.String)
+comment4.params=
+comment4.target=int\ getDescuento()
+comment5.params=
+comment5.target=java.lang.String\ nombreContactoEmpresa()
+numComments=6

@@ -1,0 +1,10 @@
+#BlueJ class context
+comment0.target=ArtesanoEnPlantilla
+comment0.text=\r\n\ Clase\ que\ describe\ objetos\ de\ tipo\ ArtesanoEnPlantilla.\r\n\ Esta\ clase\ hereda\ de\ Artesano.\r\n\ \r\n\ @author\ Marcos\ La\u00ED\u00F1o\ Ord\u00F3\u00F1ez.\ \r\n
+comment1.params=usuario\ contrase\u00F1a\ nombre\ apellidos\ telefono\ nif
+comment1.target=ArtesanoEnPlantilla(java.lang.String,\ java.lang.String,\ java.lang.String,\ java.lang.String,\ java.lang.String,\ java.lang.String)
+comment1.text=\r\n\ Constructor\ de\ la\ clase\ ArtesanoEnPlantilla\r\n
+comment2.params=
+comment2.target=void\ setComisionMuebleTerminado()
+comment2.text=\r\n\ M\u00E9todo\ que\ suma\ a\ la\ comisi\u00F3n\ del\ artesano\ en\ plantilla\ una\ comisi\u00F3n\ por\ cada\ mueble\ que\ termina.\r\n
+numComments=3
