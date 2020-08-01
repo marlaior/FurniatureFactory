@@ -1,4 +1,9 @@
 #BlueJ class context
 comment0.target=SillaOficina
 comment0.text=\r\n\ Clase\ que\ describe\ objetos\ de\ tipo\ SillaOficina\r\n\ Esta\ clase\ hereda\ de\ Silla\r\n\ \r\n\ @author\ Marcos\ La\u00ED\u00F1o\ Ord\u00F3\u00F1ez\ \r\n
-numComments=1
+comment1.params=descripcion_mueble\ cliente\ tiempoEstimado\ precio
+comment1.target=SillaOficina(java.lang.String,\ personas.Cliente,\ int,\ double)
+comment1.text=\r\n\ Constructores\ de\ la\ clase\ SillaOficina\r\n
+comment2.params=cliente
+comment2.target=SillaOficina(personas.Cliente)
+numComments=3

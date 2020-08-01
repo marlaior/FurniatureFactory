@@ -1,7 +1,21 @@
 #BlueJ class context
 comment0.target=Mueble
 comment0.text=\r\n\ Clase\ que\ describe\ objetos\ de\ tipo\ Mueble\r\n\ \r\n\ @author\ Marcos\ La\u00ED\u00F1o\ Ord\u00F3\u00F1ez\ \r\n
-comment1.params=descripcion_mueble\ cliente\ artesano\ tiempoEstimado\ anotaciones\ precio
-comment1.target=Mueble(java.lang.String,\ personas.Cliente,\ personas.Artesano,\ int,\ java.lang.String,\ double)
+comment1.params=descripcion_mueble\ cliente\ tiempoEstimado\ precio
+comment1.target=Mueble(java.lang.String,\ personas.Cliente,\ int,\ double)
 comment1.text=\r\n\ Constructor\ de\ la\ clase\ Mueble\r\n
-numComments=2
+comment2.params=estado
+comment2.target=void\ setEstado(Mueble.Estado)
+comment3.params=descripcion_mueble
+comment3.target=void\ setDescripcionMueble(java.lang.String)
+comment4.params=cliente
+comment4.target=void\ setCliente(personas.Cliente)
+comment5.params=artesano
+comment5.target=void\ setArtesano(Personas.Artesano)
+comment6.params=tiempoEstimado
+comment6.target=void\ setTiempoEstimado(int)
+comment7.params=anotaciones
+comment7.target=void\ setAnotaciones(java.lang.String)
+comment8.params=
+comment8.target=int\ getIdMueble()
+numComments=9
