@@ -27,7 +27,7 @@ public class Mueble{
     /**
      * Constructor de la clase Mueble
      */
-    public Mueble(String descripcion_mueble, Cliente cliente, Artesano artesano, int tiempoEstimado, double precio){
+    public Mueble(String descripcion_mueble, Cliente cliente, int tiempoEstimado, double precio){
         this.estado = Mueble.Estado.PENDIENTE;
         this.descripcion_mueble = descripcion_mueble;
         this.cliente = cliente;
@@ -37,8 +37,8 @@ public class Mueble{
         this.fechaCompra = new Date();
         this.anotaciones = "Datos Cliente\n"
             + "**********\n"
-            + this.cliente.getNombre + this.cliente.getApellido + "\n"
-            + "tlfno: " + this.cliente.getTelefono + "\n\n"
+            + this.cliente.getNombre() + this.cliente.getApellidos() + "\n"
+            + "tlfno: " + this.cliente.getTelefono() + "\n\n"
             + "PEDIDO\n"
             + "**********\n"
             + "Tipo Mueble = " + this.descripcion_mueble + "\n"
