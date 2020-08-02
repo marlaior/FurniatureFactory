@@ -1,0 +1,22 @@
+#BlueJ class context
+comment0.target=Controlador
+comment0.text=\r\n\ Clase\ que\ controla\ las\ distintas\ operaciones\ sobre\ ficheros\r\n\ \r\n\ @author\ Marcos\ La\u00ED\u00F1o\ Ord\u00F3\u00F1ez\r\n
+comment1.params=clientes
+comment1.target=void\ saveClientes(java.util.ArrayList)
+comment1.text=\r\n\ M\u00E9todo\ que\ permite\ guardar\ en\ un\ fichero\ el\ arraylist\ de\ clientes\ que\ se\ le\ pasa\ por\ par\u00E1metro.\r\n
+comment2.params=empleados
+comment2.target=void\ saveEmpleados(java.util.ArrayList)
+comment2.text=\r\n\ M\u00E9todo\ que\ permite\ guardar\ en\ un\ fichero\ el\ arraylist\ de\ empleados\ que\ se\ le\ pasa\ por\ par\u00E1metro.\r\n
+comment3.params=muebles
+comment3.target=void\ saveMuebles(java.util.ArrayList)
+comment3.text=\r\n\ M\u00E9todo\ que\ permite\ guardar\ en\ un\ fichero\ el\ arraylist\ de\ empleados\ que\ se\ le\ pasa\ por\ par\u00E1metro.\r\n
+comment4.params=
+comment4.target=java.util.ArrayList\ loadClientes()
+comment4.text=\r\n\ M\u00E9todo\ que\ devuelve\ un\ arraylist\ con\ todos\ los\ clientes\ guardados\ en\ el\ fichero.\r\n
+comment5.params=
+comment5.target=java.util.ArrayList\ loadEmpleados()
+comment5.text=\r\n\ M\u00E9todo\ que\ devuelve\ un\ arraylist\ con\ todos\ los\ empleados\ guardados\ en\ el\ fichero.\r\n
+comment6.params=
+comment6.target=java.util.ArrayList\ loadMuebles()
+comment6.text=\r\n\ M\u00E9todo\ que\ devuelve\ un\ arraylist\ con\ todos\ los\ muebles\ guardados\ en\ el\ fichero.\r\n
+numComments=7
