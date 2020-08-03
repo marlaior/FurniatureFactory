@@ -9,29 +9,29 @@ package personas;
 public class Cliente extends Persona{
     
     protected int id_cliente;
-    protected Comercial comercial;
+    protected int id_comercial;
     
     /**
      * Constructor de la clase Cliente
      */
     public Cliente(String usuario, String contraseña, String nombre, String apellidos, 
-        String telefono, String nif, Comercial comercial){
+        String telefono, String nif, int id_comercial){
         super(usuario, contraseña, nombre, apellidos, telefono, nif);
-        this.comercial = comercial;
+        this.id_comercial = id_comercial;
     }
     
     // ***** setters *****
     public void setIdCliente(){
     }
-    public void setComercial(Comercial comercial){
-        this.comercial = comercial;
+    public void setComercial(int id_comercial){
+        this.id_comercial = id_comercial;
     }
     // ***** getters *****
     public int getIdCliente(){
         return this.id_cliente;
     }
-    public Comercial getComercial(){
-        return this.comercial;
+    public int getIdComercial(){
+        return this.id_comercial;
     }
 
     

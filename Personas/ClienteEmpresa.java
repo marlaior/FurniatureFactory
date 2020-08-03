@@ -14,8 +14,8 @@ public class ClienteEmpresa extends Cliente{
     /**
      * Constructor de la clase ClienteEmpresa
      */
-    public ClienteEmpresa(String usuario, String contraseña, String nombre, String telefono, String nif, Comercial comercial, String nombreContactoEmpresa){
-        super(usuario, contraseña, nombre, null, telefono, nif, comercial);
+    public ClienteEmpresa(String usuario, String contraseña, String nombre, String telefono, String nif, int id_comercial, String nombreContactoEmpresa){
+        super(usuario, contraseña, nombre, null, telefono, nif, id_comercial);
         this.nombreContactoEmpresa = nombreContactoEmpresa;
         this.descuento = ClienteEmpresa.DESCUENTO_EMPRESAS;
     }
