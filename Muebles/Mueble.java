@@ -1,5 +1,6 @@
 package muebles;
 
+import java.io.Serializable;
 import personas.Persona;
 import personas.Artesano;
 import personas.Cliente;
@@ -11,7 +12,8 @@ import java.util.Date;
  * 
  * @author Marcos Laíño Ordóñez 
  */
-public class Mueble{
+public class Mueble implements Serializable{
+    private static final long serialVersionUID = 1L;
     protected enum Estado { PENDIENTE, ASIGNADO, EN_CONSTRUCCION, PAUSADO, TERMINADO, ENTREGADO };
     protected Estado estado;
     protected int id_mueble;

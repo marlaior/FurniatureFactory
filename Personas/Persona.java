@@ -1,14 +1,17 @@
 package personas;
 
+import java.io.Serializable;
+
 
 /**
  * Clase que describe objetos de tipo Persona
  * 
  * @author Marcos Laíño Ordóñez
  */
-public class Persona{
+public class Persona implements Serializable{
+    private static final long serialVersionUID = 1L;
     protected String usuario;
-    protected String contraseña;
+    protected String contrasena;
     protected String nombre;
     protected String apellido;
     protected String telefono;
@@ -17,9 +20,9 @@ public class Persona{
     /**
      * Contructor de la clase Persona
      */
-    public Persona(String usuario, String contraseña, String nombre, String apellido, String telefono, String nif){
+    public Persona(String usuario, String contrasena, String nombre, String apellido, String telefono, String nif){
         this.usuario = usuario;
-        this.contraseña = contraseña;
+        this.contrasena = contrasena;
         this.nombre = nombre;
         this.apellido = apellido;
         this.telefono = telefono;    
@@ -30,8 +33,8 @@ public class Persona{
     public void setUsuario(String usuario){
         this.usuario = usuario;
     }
-    public void setContraseña(String contraseña){
-        this.contraseña = contraseña;
+    public void setContrasena(String contrasena){
+        this.contrasena = contrasena;
     }
     public void setNombre(String nombre){
         this.nombre = nombre;
@@ -47,8 +50,8 @@ public class Persona{
     public String getUsuario(){
         return this.usuario;
     }
-    public String getContraseña(){
-        return this.contraseña;
+    public String getContrasena(){
+        return this.contrasena;
     }
     public String getNombre(){
         return this.nombre;

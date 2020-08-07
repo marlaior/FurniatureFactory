@@ -1,0 +1,12 @@
+#BlueJ class context
+comment0.target=Menu
+comment0.text=\r\n\ Clase\ que\ desplegar\u00E1\ los\ men\u00FAs\ por\ los\ que\ transitar\u00E1\ toda\ la\ aplicaci\u00F3n\r\n\ \r\n\ @author\ Marcos\ La\u00ED\u00F1o\ Ord\u00F3\u00F1ez\r\n
+comment1.params=
+comment1.target=Menu()
+comment2.params=
+comment2.target=void\ selectMenu()
+comment2.text=\r\n\ M\u00E9todo\ que\ identifica\ el\ tipo\ de\ usuario\ que\ se\ ha\ logueado\ y\ redirige\ la\ aplicaci\u00F3n\ hacia\ el\ men\u00FA\ personalizado\ correspondiente,\r\n
+comment3.params=
+comment3.target=void\ menuLogin()
+comment3.text=\r\n\ Men\u00FA\ de\ entrada\ de\ la\ aplicaci\u00F3n\ en\ el\ que\ el\ usuario\ debe\ loguearse.\r\n
+numComments=4

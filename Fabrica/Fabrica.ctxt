@@ -1,6 +1,8 @@
 #BlueJ class context
 comment0.target=Fabrica
 comment0.text=\r\n\ \r\n\ Clase\ principal\ que\ incluye\ el\ m\u00E9todo\ main\ que\ sirve\ de\ entrada\ a\ la\ aplicaci\u00F3n.\r\n\ \r\n\ @author\ Marcos\ La\u00ED\u00F1o\ Ord\u00F3\u00F1ez\r\n
-comment1.params=args
-comment1.target=void\ main(java.lang.String[])
-numComments=2
+comment1.params=
+comment1.target=Fabrica()
+comment2.params=args
+comment2.target=void\ main(java.lang.String[])
+numComments=3

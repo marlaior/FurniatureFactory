@@ -1,0 +1,10 @@
+#BlueJ class context
+comment0.target=Tabla
+comment0.text=\r\n\ Esta\ clase\ dispone\ de\ diversos\ m\u00E9todos\ para\ mostrar\ informaci\u00F3n\ en\ forma\ de\ tablas\ con\ columnas\ que\ se\ adaptan\ al\ ancho\ de\ la\ informaci\u00F3n\ contenida.\r\n\ \r\n\ @author\ Marcos\ Lai\u00F1o\r\n
+comment1.params=lista
+comment1.target=java.lang.String\ formatearTabla(java.util.List)
+comment1.text=\r\n\ M\u00E9todo\ que\ formatea\ las\ tablas\ para\ que\ las\ columnas\ se\ adapten\ al\ ancho\ del\ elemento\ de\ mayor\ tama\u00F1o.\r\n
+comment2.params=personas
+comment2.target=java.lang.String\ listaUsuarios(java.util.ArrayList)
+comment2.text=\r\n\ Metodo\ que\ muestra\ la\ lista\ de\ usuarios\ de\ la\ aplicaci\u00F3n.\r\n\ El\ objetivo\ de\ esta\ tabla\ es\ facilitar\ el\ testeo\ de\ la\ aplicaci\u00F3n.\r\n
+numComments=3
