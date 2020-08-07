@@ -1,6 +1,5 @@
 package fabrica;
 
-
 /**
  * 
  * Clase principal que incluye el método main que sirve de entrada a la aplicación.
@@ -8,10 +7,14 @@ package fabrica;
  * @author Marcos Laíño Ordóñez
  */
 public class Fabrica{
-    
-    public static void main (String ... args){
-        Controlador.checkFicheroClientes();
-        Controlador.checkFicheroMuebles();
-        Controlador.checkFicheroEmpleados();
+    public Fabrica(){
+        Controlador.checkFicheroPersonas();
+        Controlador.checkFicheroMuebles();        
+        new Menu();
+    }    
+    public static void main (String [] args){
+        Controlador.checkFicheroPersonas();
+        Controlador.checkFicheroMuebles();        
+        new Menu();
     }
 }

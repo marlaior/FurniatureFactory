@@ -1,6 +1,10 @@
 package personas;
 
 import java.util.Date;
+import java.util.ArrayList;
+import personas.Persona;
+import fabrica.Controlador;
+
 /**
  * Clase que describe objetos de tipo Empleado
  * Esta clase hereda de Persona
@@ -9,6 +13,8 @@ import java.util.Date;
  */
 public class Empleado extends Persona{
     
+    
+    protected static int num_empleados;
     protected int id_empleado;
     protected String puesto;
     protected Date fechaAlta;
@@ -19,12 +25,11 @@ public class Empleado extends Persona{
     /**
      * Constructor de la clase Empleado
      */
-    public Empleado(String usuario, String contraseña, String nombre, String apellidos, String telefono, String nif, String puesto, Double salarioBase){ 
-        super(usuario, contraseña, nombre, apellidos, telefono, nif);
-        this.id_empleado = id_empleado;
+    public Empleado(String usuario, String contrasena, String nombre, String apellidos, String telefono, String nif, String puesto, Double salarioBase){ 
+        super(usuario, contrasena, nombre, apellidos, telefono, nif);
         this.puesto = puesto;
-        this.fechaAlta = new Date();
-        
+        this.fechaAlta = new Date();        
+        setIdEmpleado();
     }
     
     // ***** Setters *****
@@ -44,6 +49,17 @@ public class Empleado extends Persona{
        this.fechaBaja = new Date();
     }
     public void setIdEmpleado(){
+        /*ArrayList<Persona> personas = Controlador.loadPersonas();
+        ArrayList<Empleado> empleados = new ArrayList<Empleado>();
+        int id = 1;
+        for (Persona auxPersona : personas){
+            if (auxPersona instanceof Empleado){
+                id++;
+            }
+        }
+        this.id_empleado = id; */
+        num_empleados++;
+        this.id_empleado = num_empleados;
     }
     
     // ***** getters *****
