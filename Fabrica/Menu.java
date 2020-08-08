@@ -17,10 +17,23 @@ public class Menu{
     private static final SoutIF<String> P = (s) -> System.out.print(s);
     private static final SoutIF<String> PLN = (s) -> System.out.println(s);
     private static ArrayList<String> opciones;
-    private static int eleccion;
+    private static int eleccionUsuario;
+    private static Scanner scanner;
 
+    /**
+     * Constructor de la clase menu
+     */
     public Menu(){
+        
         opciones = new ArrayList<String>();
+        scanner = new Scanner(System.in);
+        System.out.print('\u000C');
+        PLN.out("   ************************");
+        PLN.out("   *     Bienvenido a     *");
+        PLN.out("   *  Furniture Factory   *");
+        PLN.out("   ************************\n\n");
+        PLN.out("Pulse enter para continuar");
+        scanner.nextLine();        
         menuLogin();
     }
     /**
@@ -29,38 +42,37 @@ public class Menu{
     private static void selectMenu(){
         switch(usuarioLogueado.getClass().getSimpleName()){
             case "ArtesanoPorHoras":
-            PLN.out("Te has logueado como Artesano por horas");
-            break;
+                PLN.out("Te has logueado como Artesano por horas");
+                break;
             case "ArtesanoEnPlantilla":
-            PLN.out("Te has logueado como Artesano en plantilla");
-            break;
+                PLN.out("Te has logueado como Artesano en plantilla");
+                break;
             case "Jefe":
-            PLN.out("Te has logueado como Jefe");
-            break;
+                menuJefe();
+                break;
             case "Comercial":
-            PLN.out("Te has logueado como Comercial");
-            break;
+                PLN.out("Te has logueado como Comercial");
+                break;
             case "Artesano":
-            PLN.out("Te has logueado como Artesano");
-            break;
+                PLN.out("Te has logueado como Artesano");
+                break;
             case "Empleado":
-            PLN.out("Te has logueado como Empleado");
-            break;
+                PLN.out("Te has logueado como Empleado");
+                break;
             case "ClienteEmpresa":
-            PLN.out("Te has logueado como Cliente tipo empresa");
-            break;
+                PLN.out("Te has logueado como Cliente tipo empresa");
+                break;
             case "ClientePersona":
-            PLN.out("Te has logueado como Cliente tipo persona");
-            break;
+                PLN.out("Te has logueado como Cliente tipo persona");
+                break;
             case "Cliente":
-            PLN.out("Te has logueado como Cliente");
-            break;
+                PLN.out("Te has logueado como Cliente");
+                break;
             case "Persona":
-            PLN.out("Te has logueado como Persona");
-            break;
+                PLN.out("Te has logueado como Persona");
+                break;
             default:
-            menuLogin();
-            
+                menuLogin();            
         }        
     }    
     /**
@@ -68,38 +80,99 @@ public class Menu{
      */
     private static void menuLogin(){
         ArrayList<Persona> listaUsuarios = Controlador.loadPersonas();
-        Scanner teclado = new Scanner(System.in);
         String usuario;
         String contrasena;
         boolean existeUsuario = false;
         usuarioLogueado = null;
-        System.out.flush();
-        PLN.out("   ************************");
-        PLN.out("   *  Furniture Factory   *");
-        PLN.out("   ************************\n\n");
 
-        PLN.out("Lista de usuarios disponibles\n(se muestran los usuarios disponibles únicamente para facilitar las pruebas)\n\n");
+        System.out.print('\u000C');
+        PLN.out(" LOGIN");
+	PLN.out("=======");
+        PLN.out("Lista de usuarios disponibles\n(se muestran esta lista únicamente para facilitar las pruebas)\n\n");
         PLN.out("\n" + tools.Tabla.listaUsuarios(listaUsuarios) + "\n");
         do{
             existeUsuario = false;
             P.out("USUARIO: ");
-            usuario = teclado.nextLine();
+            usuario = scanner.nextLine();
             P.out("\nCONTRASEÑA: ");
-            contrasena = teclado.nextLine();
+            contrasena = scanner.nextLine();
             for(Persona auxPersona : listaUsuarios){
                 if (auxPersona.getUsuario().equalsIgnoreCase(usuario)){
                     existeUsuario = true;
                     if(auxPersona.getContrasena().equals(contrasena)){
-                        PLN.out("Contraseña correcta");
+                        System.out.print('\u000C');
+                        PLN.out("Te has logueado correctamente.");
                         usuarioLogueado = auxPersona;                        
-                    }else PLN.out("Contraseña incorrecta");
+                    }else PLN.out("Contraseña incorrecta.");
                     break;
                 }                
             }
             if(!existeUsuario){
-                    PLN.out("No existe usuario con ese nick");
+                    PLN.out("No existe usuario con ese nick. Inténtelo de nuevo.");
             }
         }while(usuarioLogueado == null);
         selectMenu();
     }   
+    /**
+     * Menú principal de opciones para el usuario Jefe
+     */
+    private static void menuJefe(){
+        opciones.clear();
+        System.out.print('\u000C');
+
+	PLN.out("MENÚ PRINCIPAL");
+	PLN.out("==============");
+	opciones.add("\n0 = Salir de la aplicación");
+	opciones.add("1 = Cerrar sesión");
+	opciones.add("2 = Perfil");
+	opciones.add("3 = Empleados");
+	opciones.add("4 = Pedidos");
+
+	eleccionUsuario = elegirOpcion();
+
+	switch (eleccionUsuario) {
+	    case 0: // el programa se cierra
+	       System.out.print('\u000C');
+	       PLN.out("Ha elegido finalizar el programa");
+	       PLN.out("Hasta pronto");
+	       PLN.out("\nPrograma finalizado");
+	       System.exit(0);
+	       break;
+	    case 1:
+	       usuarioLogueado = null;
+	       menuLogin();
+	}        
+    }
+    /**
+     * Método que gestiona la elección de opciones en los menús por parte del usuario.
+     */
+    private static int elegirOpcion() {
+        for (String string : opciones) {
+            PLN.out(string);
+        }
+        eleccionUsuario = -1;
+        boolean allRight = false;
+        PLN.out("Escoja una opción: ");
+        do {
+            try {
+                eleccionUsuario = scanner.nextInt();
+                scanner.nextLine(); // limpia pulsaciones residuales de cara a posibles sucesiones.
+                if (eleccionUsuario < 0) {
+                    PLN.out("No existen opciones con números negativos");
+                } else if (eleccionUsuario >= opciones.size()) {
+                    PLN.out("No hay ninguna opción con ese número");
+                } else {
+                    allRight = true;
+                }
+            } catch (Exception e) {
+                PLN.out("Valor incorrecto.");
+                eleccionUsuario = -1;
+                scanner.nextLine();
+            }
+            if (!allRight) {
+                P.out("\nVuelva a escoger una opción: ");
+            }
+        } while (!allRight);
+        return eleccionUsuario;
+    }
 }
