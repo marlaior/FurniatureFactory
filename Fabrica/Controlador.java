@@ -9,6 +9,7 @@ import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Scanner;
 import tools.SoutIF;
 import personas.*;
 import muebles.*;
@@ -22,7 +23,10 @@ public class Controlador{
     private static final SoutIF<String> PLN = (s) -> System.out.println(s);
     private static final SoutIF<String> P = (s) -> System.out.println(s);
     private static final SoutIF<String> PELN = (s) -> System.err.println(s);
-       private static final String RUTAFICHERO_PERSONAS = "personas.dat";
+    private static final Scanner scanner = new Scanner(System.in);
+    private static ArrayList<String> opciones = new ArrayList<String>();
+    private static int eleccionUsuario;
+    private static final String RUTAFICHERO_PERSONAS = "personas.dat";
     private static final String RUTAFICHERO_MUEBLES = "muebles.dat";
     private static final File FICHERO_PERSONAS = new File(RUTAFICHERO_PERSONAS);
     private static final File FICHERO_MUEBLES = new File(RUTAFICHERO_MUEBLES);
@@ -143,7 +147,9 @@ public class Controlador{
      */
     public static void initialData() {
     
-        ArrayList<Persona> personas = new ArrayList<Persona>();		
+        ArrayList<Persona> personas = new ArrayList<Persona>(); 
+        
+        //añadimos al arraylist objetos de tipo Empleado
         personas.add(new Jefe("bruce", "pass", "Bruce", "Dickinson", "666-123456", "12345678A"));
         personas.add(new Jefe("steve", "pass", "Steve", "Harris", "666-123457", "12345679B"));
         personas.add(new Comercial("page", "pass", "Jimmy", "Page", "666-123458", "12345680C", "Londres"));
@@ -153,7 +159,8 @@ public class Controlador{
         personas.add(new ArtesanoPorHoras("cliff", "pass", "Cliff", "Burton", "666-123462", "12345684G"));
         personas.add(new ArtesanoPorHoras("trujillo", "pass", "Robert", "Trujillo", "666-123463", "12345686H"));
         personas.add(new ArtesanoPorHoras("kirk", "pass", "Kirk", "Hammett", "666-123464", "12345687I"));
-  	
+        
+        //añadimos al arraylist objetos de tipo Empleado
         personas.add(new ClientePersona("lemmy", "pass", "Lemmy", "Kilmister", "666-123465", "12345688J", 3));
         personas.add(new ClientePersona("dio", "pass", "Ronnie", "James", "666-123466", "12345689K", 3));
         personas.add(new ClientePersona("ozzy", "pass", "Ozzy", "James", "666-123467", "12345690L", 4));
@@ -161,15 +168,158 @@ public class Controlador{
         personas.add(new ClienteEmpresa("ghost", "pass", "Ghost B.C.", "666-123469", "A12345692", 3, "Tobias Forge"));
         personas.add(new ClienteEmpresa("ok", "pass", "Ok Computer", "666-123470", "A12345693", 3, "Thom York"));
         personas.add(new ClienteEmpresa("rubber", "pass", "Rubber Factory", "666-123471", "A12345694", 4, "Dan Auerbach"));
-        personas.add(new ClienteEmpresa("fabfour", "pass", "The Fab Four", "666-123472", "A12345695", 4, "Richard Starkey"));		
+        personas.add(new ClienteEmpresa("fabfour", "pass", "The Fab Four", "666-123472", "A12345695", 4, "Richard Starkey"));
+        
+        //guardamos el arraylist en el archivo
         savePersonas(personas);
         
+        //creamos el arraylist de muebles(vacío) y lo añadimos al fichero
         ArrayList<Mueble> muebles = new ArrayList<Mueble>();
         saveMuebles(muebles);
-        
-        // ********** LOGIN **********
-        
     }
-	
     
+    // ********** Menu Jefe **********
+    
+    /**
+     * Método que permite al Jefe consultar la lista de todos los empleados con los datos más relevantes
+     */
+    public static void verListaEmpleados(){
+        ArrayList<Persona> personas = loadPersonas();
+        ArrayList<Empleado> empleados = new ArrayList<Empleado>();
+        for (Persona auxPersona : personas){
+            if (auxPersona instanceof Empleado){
+                empleados.add((Empleado)auxPersona);
+            }
+        }
+        PLN.out(tools.Tabla.listaEmpleados(empleados));        
+    } 
+    /**
+     * Método que permite al jefe "contratar" a través de un formulario.
+     */
+    public static void crearEmpleado(){
+        ArrayList<Persona> personas = loadPersonas();
+        boolean existe = false;
+        Empleado nuevoEmpleado = null;
+        P.out("\nNOMBRE: ");
+        String nombre = setDato("nombre", 0, 0, 15);
+        P.out("\nAPELLIDO: ");        
+        String apellidos = setDato("apellido", 0, 0, 15);
+        P.out("\nALIAS DE USUARIO: ");
+        String usuario = "";
+        do{
+            usuario = setDato("nick", 0, 0, 15);
+            existe = comprobarNick(usuario);
+        } while (existe);
+        P.out("\nCONTRASEÑA INICIAL: ");
+        String contrasena = setDato("password", 0, 4, 15);
+        P.out("\nNIF/CIF: ");
+        String nif = setDato("NIF/CIF", 9, 0, 0);
+        P.out("\nTELÉFONO: ");
+        String telefono = setDato("teléfono", 9, 0, 0);
+        P.out("\nPUESTO: ");
+        opciones.add("\n0 = Cancelar");
+	opciones.add("1 = Jefe");
+	opciones.add("2 = Comercial");
+	opciones.add("3 = Artesano en plantilla");
+	opciones.add("4 = Artesano por horas");  
+	int eleccionUsuario = elegirOpcion();
+	
+	switch (eleccionUsuario) {
+	    case 0:
+	       System.out.print('\u000C');
+	       PLN.out("LISTA DE EMPLEADOS");
+	       PLN.out("==================\n");
+	       Controlador.verListaEmpleados();
+	       Menu.menuJefeEmpleados();
+	    case 1:
+	       nuevoEmpleado = new Jefe(usuario, contrasena, nombre, apellidos, telefono, nif);
+	       //String usuario, String contrasena, String nombre, String apellidos, String telefono, String nif    
+	       
+	}  
+	personas.add(nuevoEmpleado);
+	savePersonas(personas);
+	Menu.menuJefeEmpleados();	
+    }
+    /**
+     * Método que comprueba si el nick que pasamos como parámetro corresponde a algún usuario existente
+     */
+    private static boolean comprobarNick(String usuario){
+        ArrayList<Persona> personas = loadPersonas();
+        boolean existe = false;
+        for(Persona auxPersona : personas){
+            if (usuario.equalsIgnoreCase(auxPersona.getUsuario())){
+                existe = true;
+                P.out("\nYa existe un usuario con ese nick.\n\nIndique otro nick: ");
+                break;
+            }
+        }
+        return existe;
+    }
+    /**
+     * Método que permite que el usuario establezca el nombre de un nuevo usuario
+     */
+    private static String setDato(String campo, int exacto, int min, int max){
+        String valor = "";
+        boolean right = false;
+        do{
+            try {
+                valor = scanner.nextLine();
+                if (valor.trim().equals("")) {
+                    PLN.out("1");
+                    PLN.out("El " + campo + " del usuario no puede estar vacío");
+                } else if (exacto != 0 && valor.length() != exacto) {
+                    PLN.out("2");
+                    PLN.out("El " + campo + " del usuario debe tener " + exacto + " caracteres");
+                }else if (max != 0 && valor.length() > max) {
+                    PLN.out("3");
+                    PLN.out("El " + campo + " del usuario no puede superar los " + max + " caracteres");
+                } else if (min != 0 && valor.length() < min) {
+                    PLN.out("4");
+                    PLN.out("El " + campo + " del usuario no puede tener menos de " + min + " caracteres");
+                }else {
+                    PLN.out("5");
+                    right = true;
+                }
+            } catch (Exception e) {
+                PLN.out("6");
+                PLN.out("Valor incorrecto.");
+                scanner.nextLine();
+            }
+            if (!right) {
+                P.out("\nIndique otro " + campo +": ");
+            }
+        } while (!right);
+        
+        return valor;
+    }
+    
+    public static int elegirOpcion() {
+        for (String string : opciones) {
+            PLN.out(string);
+        }
+        eleccionUsuario = -1;
+        boolean allRight = false;
+        PLN.out("Escoja una opción: ");
+        do {
+            try {
+                eleccionUsuario = scanner.nextInt();
+                scanner.nextLine(); // limpia pulsaciones residuales de cara a posibles sucesiones.
+                if (eleccionUsuario < 0) {
+                    PLN.out("No existen opciones con números negativos");
+                } else if (eleccionUsuario >= opciones.size()) {
+                    PLN.out("No hay ninguna opción con ese número");
+                } else {
+                    allRight = true;
+                }
+            } catch (Exception e) {
+                PLN.out("Valor incorrecto.");
+                eleccionUsuario = -1;
+                scanner.nextLine();
+            }
+            if (!allRight) {
+                P.out("\nVuelva a escoger una opción: ");
+            }
+        } while (!allRight);
+        return eleccionUsuario;
+    }
 }

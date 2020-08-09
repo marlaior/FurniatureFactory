@@ -17,8 +17,8 @@ public class Empleado extends Persona{
     protected static int num_empleados;
     protected int id_empleado;
     protected String puesto;
-    protected Date fechaAlta;
-    protected Date fechaBaja;
+    protected Date fechaAlta = null;
+    protected Date fechaBaja = null;
     protected double salarioBase;
     protected double comision;
     

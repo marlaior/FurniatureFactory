@@ -116,7 +116,7 @@ public class Menu{
     /**
      * Menú principal de opciones para el usuario Jefe
      */
-    private static void menuJefe(){
+    public static void menuJefe(){
         opciones.clear();
         System.out.print('\u000C');
 
@@ -138,15 +138,52 @@ public class Menu{
 	       PLN.out("\nPrograma finalizado");
 	       System.exit(0);
 	       break;
-	    case 1:
+	    case 1: // cierra sesión y regresa al login
 	       usuarioLogueado = null;
+	       System.out.print('\u000C');
 	       menuLogin();
+	       break;
+	    case 3: // consulta la lista de empleados
+	       Menu.menuJefeEmpleados();
+	       break;
+	}        
+    }
+    
+    /**
+     * Menú con el que el Jefe gestiona la lista de empleados
+     */
+    public static void menuJefeEmpleados(){
+        System.out.print('\u000C');
+	PLN.out("LISTA DE EMPLEADOS");
+	PLN.out("==================\n");
+	Controlador.verListaEmpleados();
+        opciones.clear();
+
+	PLN.out("\n\nOpciones");
+	PLN.out("========");
+	opciones.add("\n0 = Volver al menú principal");
+	opciones.add("1 = Contratar un nuevo empleado");
+
+	eleccionUsuario = elegirOpcion();
+
+	switch (eleccionUsuario) {
+	    case 0: // regresamos al menú principal del jefe
+	       System.out.print('\u000C');
+	       menuJefe();
+	       break;
+	    case 1: // se crea un nuevo empleado
+	       PLN.out("\n\nNuevo empleado");
+	       PLN.out("==============");
+	       Controlador.crearEmpleado();
+	       break;
+
+	       
 	}        
     }
     /**
      * Método que gestiona la elección de opciones en los menús por parte del usuario.
      */
-    private static int elegirOpcion() {
+    public static int elegirOpcion() {
         for (String string : opciones) {
             PLN.out(string);
         }
