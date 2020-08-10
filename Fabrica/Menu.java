@@ -125,7 +125,7 @@ public class Menu{
 	opciones.add("\n0 = Salir de la aplicación");
 	opciones.add("1 = Cerrar sesión");
 	opciones.add("2 = Perfil");
-	opciones.add("3 = Empleados");
+	opciones.add("3 = Gestión de empleados");
 	opciones.add("4 = Pedidos");
 
 	eleccionUsuario = elegirOpcion();
