@@ -30,6 +30,14 @@ public class Empleado extends Persona{
         this.puesto = puesto;
         this.fechaAlta = new Date();        
         setIdEmpleado();
+        saveEmpleado();
+        
+    }
+    
+    private void saveEmpleado(){
+        ArrayList<Persona> personas = Controlador.loadPersonas();
+        personas.add(this);
+        Controlador.savePersonas(personas);
     }
     
     // ***** Setters *****
@@ -49,17 +57,17 @@ public class Empleado extends Persona{
        this.fechaBaja = new Date();
     }
     public void setIdEmpleado(){
-        /*ArrayList<Persona> personas = Controlador.loadPersonas();
+        num_empleados = 1;
+        ArrayList<Persona> personas = Controlador.loadPersonas();
         ArrayList<Empleado> empleados = new ArrayList<Empleado>();
-        int id = 1;
+        int id = 0;
         for (Persona auxPersona : personas){
             if (auxPersona instanceof Empleado){
-                id++;
+                    num_empleados++;
             }
         }
-        this.id_empleado = id; */
-        num_empleados++;
-        this.id_empleado = num_empleados;
+        this.id_empleado = num_empleados; 
+
     }
     
     // ***** getters *****

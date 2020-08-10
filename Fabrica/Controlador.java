@@ -170,9 +170,6 @@ public class Controlador{
         personas.add(new ClienteEmpresa("rubber", "pass", "Rubber Factory", "666-123471", "A12345694", 4, "Dan Auerbach"));
         personas.add(new ClienteEmpresa("fabfour", "pass", "The Fab Four", "666-123472", "A12345695", 4, "Richard Starkey"));
         
-        //guardamos el arraylist en el archivo
-        savePersonas(personas);
-        
         //creamos el arraylist de muebles(vacío) y lo añadimos al fichero
         ArrayList<Mueble> muebles = new ArrayList<Mueble>();
         saveMuebles(muebles);
@@ -201,44 +198,52 @@ public class Controlador{
         boolean existe = false;
         Empleado nuevoEmpleado = null;
         P.out("\nNOMBRE: ");
-        String nombre = setDato("nombre", 0, 0, 15);
+        String nombre = setDato("nombre", false,  0, 0, 15);
         P.out("\nAPELLIDO: ");        
-        String apellidos = setDato("apellido", 0, 0, 15);
+        String apellidos = setDato("apellido", true,  0, 0, 15);
         P.out("\nALIAS DE USUARIO: ");
         String usuario = "";
         do{
-            usuario = setDato("nick", 0, 0, 15);
+            usuario = setDato("nick", false, 0, 0, 15);
             existe = comprobarNick(usuario);
         } while (existe);
         P.out("\nCONTRASEÑA INICIAL: ");
-        String contrasena = setDato("password", 0, 4, 15);
+        String contrasena = setDato("password", false, 0, 4, 15);
         P.out("\nNIF/CIF: ");
-        String nif = setDato("NIF/CIF", 9, 0, 0);
+        String nif = setDato("NIF/CIF", false, 9, 0, 0);
         P.out("\nTELÉFONO: ");
-        String telefono = setDato("teléfono", 9, 0, 0);
+        String telefono = setDato("teléfono", true, 0, 0, 0);
         P.out("\nPUESTO: ");
         opciones.add("\n0 = Cancelar");
-	opciones.add("1 = Jefe");
-	opciones.add("2 = Comercial");
-	opciones.add("3 = Artesano en plantilla");
-	opciones.add("4 = Artesano por horas");  
-	int eleccionUsuario = elegirOpcion();
-	
-	switch (eleccionUsuario) {
-	    case 0:
-	       System.out.print('\u000C');
-	       PLN.out("LISTA DE EMPLEADOS");
-	       PLN.out("==================\n");
-	       Controlador.verListaEmpleados();
-	       Menu.menuJefeEmpleados();
-	    case 1:
-	       nuevoEmpleado = new Jefe(usuario, contrasena, nombre, apellidos, telefono, nif);
-	       //String usuario, String contrasena, String nombre, String apellidos, String telefono, String nif    
-	       
-	}  
-	personas.add(nuevoEmpleado);
-	savePersonas(personas);
-	Menu.menuJefeEmpleados();	
+    opciones.add("1 = Jefe");
+    opciones.add("2 = Comercial");
+    opciones.add("3 = Artesano en plantilla");
+    opciones.add("4 = Artesano por horas");  
+    int eleccionUsuario = elegirOpcion();
+    
+    switch (eleccionUsuario) {
+        case 0:
+           System.out.print('\u000C');
+           PLN.out("LISTA DE EMPLEADOS");
+           PLN.out("==================\n");
+           Controlador.verListaEmpleados();
+           Menu.menuJefeEmpleados();
+        case 1:
+            nuevoEmpleado = new Jefe(usuario, contrasena, nombre, apellidos, telefono, nif);
+            break;
+        case 2:
+            String zona = setDato("ZONA: ", false, 0, 0, 0);
+            nuevoEmpleado = new Comercial(usuario, contrasena, nombre, apellidos, telefono, nif, zona);
+            break;        
+        case 3:
+            nuevoEmpleado = new ArtesanoEnPlantilla(usuario, contrasena, nombre, apellidos, telefono, nif);
+            break;
+        case 4:
+            nuevoEmpleado = new ArtesanoPorHoras(usuario, contrasena, nombre, apellidos, telefono, nif);
+    }  
+    personas.add(nuevoEmpleado);
+    savePersonas(personas);
+    Menu.menuJefeEmpleados();   
     }
     /**
      * Método que comprueba si el nick que pasamos como parámetro corresponde a algún usuario existente
@@ -256,28 +261,23 @@ public class Controlador{
         return existe;
     }
     /**
-     * Método que permite que el usuario establezca el nombre de un nuevo usuario
+     * Método que permite que el usuario establezca el valor de un atributo estableciendo unos límites al valor.
      */
-    private static String setDato(String campo, int exacto, int min, int max){
+    private static String setDato(String campo, boolean nulo, int exacto, int min, int max){
         String valor = "";
         boolean right = false;
         do{
             try {
                 valor = scanner.nextLine();
-                if (valor.trim().equals("")) {
-                    PLN.out("1");
+                if (!nulo && valor.trim().equals("")) {
                     PLN.out("El " + campo + " del usuario no puede estar vacío");
                 } else if (exacto != 0 && valor.length() != exacto) {
-                    PLN.out("2");
-                    PLN.out("El " + campo + " del usuario debe tener " + exacto + " caracteres");
+                    PLN.out("El " + campo + " del usuario debe tener exactamente " + exacto + " caracteres");
                 }else if (max != 0 && valor.length() > max) {
-                    PLN.out("3");
                     PLN.out("El " + campo + " del usuario no puede superar los " + max + " caracteres");
                 } else if (min != 0 && valor.length() < min) {
-                    PLN.out("4");
                     PLN.out("El " + campo + " del usuario no puede tener menos de " + min + " caracteres");
                 }else {
-                    PLN.out("5");
                     right = true;
                 }
             } catch (Exception e) {
@@ -292,6 +292,7 @@ public class Controlador{
         
         return valor;
     }
+
     
     public static int elegirOpcion() {
         for (String string : opciones) {
