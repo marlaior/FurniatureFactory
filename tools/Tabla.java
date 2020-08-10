@@ -1,8 +1,11 @@
 package tools;
 
+//package tools;
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.ArrayList;
+import java.text.SimpleDateFormat;
 import personas.Persona;
 import personas.Cliente;
 import personas.Empleado;
@@ -55,6 +58,29 @@ public class Tabla{
 		listas.add((List<String>) Arrays.asList(String.valueOf(pos), persona.getUsuario(), persona.getContrasena(), empleado.getPuesto()));
             }
             pos++;
+	}
+	return formatearTabla(listas) + "\n";
+    }
+    /**
+     * Metodo que muestra la lista de empleados de la fábrica.
+     * Esta tabla la puede consultar el Jefe
+     */
+    public static String listaEmpleados(ArrayList<Empleado> empleados) {
+        List<List<String>> listas = new ArrayList<>();
+	List<String> headers = Arrays.asList("ID Empleado", "nombre", "apellidos", "puesto", "fecha de alta", "fecha de baja"); // cabecera
+	List<String> separators = Arrays.asList("-----------", "------", "---------", "------", "-------------", "-------------");
+	listas.add(headers);
+	listas.add(separators);
+	for (Empleado empleadoAux : empleados) {
+	    String baja = (empleadoAux.getFechaBaja() == null) ? null : new SimpleDateFormat("dd/MM/yyyy").format(empleadoAux.getFechaBaja());
+	    listas.add((List<String>) Arrays.asList(
+	       String.valueOf(empleadoAux.getIdEmpleado()), 
+	       empleadoAux.getNombre(), 
+	       empleadoAux.getApellidos(), 
+	       empleadoAux.getPuesto(), 
+	       new SimpleDateFormat("dd/MM/yyyy").format(empleadoAux.getFechaAlta()), 
+	       "null"//new SimpleDateFormat("dd/MM/yyyy").format(empleadoAux.getFechaBaja())
+	    ));            
 	}
 	return formatearTabla(listas) + "\n";
     }

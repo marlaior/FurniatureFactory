@@ -15,8 +15,8 @@ public class Jefe extends Empleado{
     /**
      * Constructor de la clase Jefe
      */
-    public Jefe(String usuario, String contraseña, String nombre, String apellidos, String telefono, String nif){
-        super(usuario, contraseña, nombre, apellidos, telefono, nif, Jefe.PUESTO_JEFE, Jefe.SALARIO_BASE_JEFE);        
+    public Jefe(String usuario, String contrasena, String nombre, String apellidos, String telefono, String nif){
+        super(usuario, contrasena, nombre, apellidos, telefono, nif, Jefe.PUESTO_JEFE, Jefe.SALARIO_BASE_JEFE);        
     }
     
     
