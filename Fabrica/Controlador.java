@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Scanner;
+import java.util.Date;
 import tools.SoutIF;
 import personas.*;
 import muebles.*;
@@ -78,6 +79,21 @@ public class Controlador{
         }
         return personas;
     }
+    
+    /**
+     * Método que devuelve un arraylist con todos los empleados guardados en el fichero.
+     */
+    public static ArrayList<Empleado> loadEmpleados() {
+        ArrayList<Persona> personas = loadPersonas();
+        ArrayList<Empleado> empleados = new ArrayList<Empleado>();
+        for (Persona auxPersona : personas){
+            if(auxPersona instanceof Empleado){
+                empleados.add((Empleado)auxPersona);
+            }
+        }
+        return empleados;
+    }
+
     /**
      * Método que comprueba que exista los archivos de datos.
      * En caso de que no existan estos archivos, los crea con datos iniciales para poder realizar las pruebas.
@@ -181,13 +197,7 @@ public class Controlador{
      * Método que permite al Jefe consultar la lista de todos los empleados con los datos más relevantes
      */
     public static void verListaEmpleados(){
-        ArrayList<Persona> personas = loadPersonas();
-        ArrayList<Empleado> empleados = new ArrayList<Empleado>();
-        for (Persona auxPersona : personas){
-            if (auxPersona instanceof Empleado){
-                empleados.add((Empleado)auxPersona);
-            }
-        }
+        ArrayList<Empleado> empleados = loadEmpleados();
         PLN.out(tools.Tabla.listaEmpleados(empleados));        
     } 
     /**
@@ -215,35 +225,75 @@ public class Controlador{
         String telefono = setDato("teléfono", true, 0, 0, 0);
         P.out("\nPUESTO: ");
         opciones.add("\n0 = Cancelar");
-    opciones.add("1 = Jefe");
-    opciones.add("2 = Comercial");
-    opciones.add("3 = Artesano en plantilla");
-    opciones.add("4 = Artesano por horas");  
-    int eleccionUsuario = elegirOpcion();
-    
-    switch (eleccionUsuario) {
-        case 0:
-           System.out.print('\u000C');
-           PLN.out("LISTA DE EMPLEADOS");
-           PLN.out("==================\n");
-           Controlador.verListaEmpleados();
-           Menu.menuJefeEmpleados();
-        case 1:
-            nuevoEmpleado = new Jefe(usuario, contrasena, nombre, apellidos, telefono, nif);
-            break;
-        case 2:
-            String zona = setDato("ZONA: ", false, 0, 0, 0);
-            nuevoEmpleado = new Comercial(usuario, contrasena, nombre, apellidos, telefono, nif, zona);
-            break;        
-        case 3:
-            nuevoEmpleado = new ArtesanoEnPlantilla(usuario, contrasena, nombre, apellidos, telefono, nif);
-            break;
-        case 4:
-            nuevoEmpleado = new ArtesanoPorHoras(usuario, contrasena, nombre, apellidos, telefono, nif);
-    }  
-    personas.add(nuevoEmpleado);
-    savePersonas(personas);
-    Menu.menuJefeEmpleados();   
+        opciones.add("1 = Jefe");
+        opciones.add("2 = Comercial");
+        opciones.add("3 = Artesano en plantilla");
+        opciones.add("4 = Artesano por horas");  
+        int eleccionUsuario = elegirOpcion();    
+        switch (eleccionUsuario) {
+            case 0:
+               System.out.print('\u000C');
+               PLN.out("LISTA DE EMPLEADOS");
+               PLN.out("==================\n");
+               Controlador.verListaEmpleados();
+               Menu.menuJefeEmpleados();
+            case 1:
+                nuevoEmpleado = new Jefe(usuario, contrasena, nombre, apellidos, telefono, nif);
+                break;
+            case 2:
+                String zona = setDato("ZONA: ", false, 0, 0, 0);
+                nuevoEmpleado = new Comercial(usuario, contrasena, nombre, apellidos, telefono, nif, zona);
+                break;        
+            case 3:
+                nuevoEmpleado = new ArtesanoEnPlantilla(usuario, contrasena, nombre, apellidos, telefono, nif);
+                break;
+            case 4:
+                nuevoEmpleado = new ArtesanoPorHoras(usuario, contrasena, nombre, apellidos, telefono, nif);
+        }  
+        personas.add(nuevoEmpleado);
+        savePersonas(personas);
+        Menu.menuJefeEmpleados();   
+    }
+    /**
+     * Método con el que el jefe despide a un empleado.
+     * Despedir un empleado supone que la fecha de baja deja de ser nula y tiene dos consecuencias inmediatas:
+     *  1) El empleado despedido no puede loguearse en la aplicación.
+     *  2) Si el empleado es un Artesano los muebles asignados a este usuario quedan desasignados.
+     *      Y si el empleado es un comercial, los clientes asignados a este comercial quedan con el campo id_comercial como nulo.
+     *  Como condición, un jefe no puede despedirse a si mismo.
+     */
+    public static void despedirEmpleado(){
+        ArrayList<Persona> personas = loadPersonas();
+        int id = -1;
+        boolean existe = false;
+        id = seleccionarIdEmpleado();
+        for (Persona auxPersona : personas){
+            if (auxPersona instanceof Empleado){                
+                if (((Empleado)auxPersona).getIdEmpleado() == id){
+                    if(((Empleado)auxPersona).getFechaBaja() != null){
+                        PLN.out("Este empleado ya no formaba parte de tu plantilla");
+                    }
+                    else{
+                        boolean confirmar = tools.Herramientas.confirmarDecision();
+                        if (confirmar){
+                            ((Empleado)auxPersona).setFechaBaja();
+                            personas.add(auxPersona);
+                            savePersonas(personas);
+                            PLN.out("El empleado ya no forma parte de la plantilla");
+                        }else{
+                            PLN.out("Acción cancelada por el usuario");
+                        }
+                    }
+                    existe = true;
+                    break;
+                }                    
+            }
+        }                     
+        if(!existe){
+            PLN.out("No existe un usuario con ese Id.");
+        }
+        tools.Herramientas.enterParaContinuar();
+        Menu.menuJefeEmpleados();
     }
     /**
      * Método que comprueba si el nick que pasamos como parámetro corresponde a algún usuario existente
@@ -288,11 +338,9 @@ public class Controlador{
             if (!right) {
                 P.out("\nIndique otro " + campo +": ");
             }
-        } while (!right);
-        
+        } while (!right);        
         return valor;
     }
-
     
     public static int elegirOpcion() {
         for (String string : opciones) {
@@ -323,4 +371,31 @@ public class Controlador{
         } while (!allRight);
         return eleccionUsuario;
     }
+    public static int seleccionarIdEmpleado() {        
+        ArrayList<Persona> personas = loadPersonas();
+        int id = -1;
+        boolean allRight = false;
+        P.out("Indique el id del empleado: ");
+        do {           
+            try {
+                id = scanner.nextInt();
+                scanner.nextLine(); // limpia pulsaciones residuales de cara a posibles sucesiones.
+                PLN.out("id = "+id);
+                if (id < 0) {
+                    PLN.out("No existen Ids negativos");
+                } else {                   
+                    allRight = true;
+                    PLN.out("allRight = " + allRight);
+                }
+            } catch (Exception e) {
+                PLN.out("Valor incorrecto.");
+                id = -1;
+                scanner.nextLine();
+            }
+            if(!allRight) {
+                P.out("Indique otro Id: ");
+            }
+        } while (!allRight);
+        return id;
+    }    
 }

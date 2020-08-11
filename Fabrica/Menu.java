@@ -32,8 +32,7 @@ public class Menu{
         PLN.out("   *     Bienvenido a     *");
         PLN.out("   *  Furniture Factory   *");
         PLN.out("   ************************\n\n");
-        PLN.out("Pulse enter para continuar");
-        scanner.nextLine();        
+        tools.Herramientas.enterParaContinuar();      
         menuLogin();
     }
     /**
@@ -87,7 +86,7 @@ public class Menu{
 
         System.out.print('\u000C');
         PLN.out(" LOGIN");
-	PLN.out("=======");
+        PLN.out("=======");
         PLN.out("Lista de usuarios disponibles\n(se muestran esta lista únicamente para facilitar las pruebas)\n\n");
         PLN.out("\n" + tools.Tabla.listaUsuarios(listaUsuarios) + "\n");
         do{
@@ -120,33 +119,33 @@ public class Menu{
         opciones.clear();
         System.out.print('\u000C');
 
-	PLN.out("MENÚ PRINCIPAL");
-	PLN.out("==============");
-	opciones.add("\n0 = Salir de la aplicación");
-	opciones.add("1 = Cerrar sesión");
-	opciones.add("2 = Perfil");
-	opciones.add("3 = Gestión de empleados");
-	opciones.add("4 = Pedidos");
+    PLN.out("MENÚ PRINCIPAL");
+    PLN.out("==============");
+    opciones.add("\n0 = Salir de la aplicación");
+    opciones.add("1 = Cerrar sesión");
+    opciones.add("2 = Perfil");
+    opciones.add("3 = Gestión de empleados");
+    opciones.add("4 = Pedidos");
 
-	eleccionUsuario = elegirOpcion();
+    eleccionUsuario = elegirOpcion();
 
-	switch (eleccionUsuario) {
-	    case 0: // el programa se cierra
-	       System.out.print('\u000C');
-	       PLN.out("Ha elegido finalizar el programa");
-	       PLN.out("Hasta pronto");
-	       PLN.out("\nPrograma finalizado");
-	       System.exit(0);
-	       break;
-	    case 1: // cierra sesión y regresa al login
-	       usuarioLogueado = null;
-	       System.out.print('\u000C');
-	       menuLogin();
-	       break;
-	    case 3: // consulta la lista de empleados
-	       Menu.menuJefeEmpleados();
-	       break;
-	}        
+    switch (eleccionUsuario) {
+        case 0: // el programa se cierra
+           System.out.print('\u000C');
+           PLN.out("Ha elegido finalizar el programa");
+           PLN.out("Hasta pronto");
+           PLN.out("\nPrograma finalizado");
+           System.exit(0);
+           break;
+        case 1: // cierra sesión y regresa al login
+           usuarioLogueado = null;
+           System.out.print('\u000C');
+           menuLogin();
+           break;
+        case 3: // consulta la lista de empleados
+           Menu.menuJefeEmpleados();
+           break;
+    }        
     }
     
     /**
@@ -154,31 +153,35 @@ public class Menu{
      */
     public static void menuJefeEmpleados(){
         System.out.print('\u000C');
-	PLN.out("LISTA DE EMPLEADOS");
-	PLN.out("==================\n");
-	Controlador.verListaEmpleados();
-        opciones.clear();
-
-	PLN.out("\n\nOpciones");
-	PLN.out("========");
-	opciones.add("\n0 = Volver al menú principal");
-	opciones.add("1 = Contratar un nuevo empleado");
-
-	eleccionUsuario = elegirOpcion();
-
-	switch (eleccionUsuario) {
-	    case 0: // regresamos al menú principal del jefe
-	       System.out.print('\u000C');
-	       menuJefe();
-	       break;
-	    case 1: // se crea un nuevo empleado
-	       PLN.out("\n\nNuevo empleado");
-	       PLN.out("==============");
-	       Controlador.crearEmpleado();
-	       break;
-
-	       
-	}        
+        PLN.out("LISTA DE EMPLEADOS");
+        PLN.out("==================\n");
+        Controlador.verListaEmpleados();
+            opciones.clear();
+    
+        PLN.out("\n\nOpciones");
+        PLN.out("========");
+        opciones.add("\n0 = Volver al menú principal");
+        opciones.add("1 = Contratar nuevo empleado");
+        opciones.add("2 = Despedir empleado");
+    
+        eleccionUsuario = elegirOpcion();
+    
+        switch (eleccionUsuario) {
+            case 0: // regresamos al menú principal del jefe
+               System.out.print('\u000C');
+               menuJefe();
+               break;
+            case 1: // se crea un nuevo empleado
+               PLN.out("\n\nNuevo empleado");
+               PLN.out("==============");
+               Controlador.crearEmpleado();
+               break;
+            case 2:
+               PLN.out("\n\nDespedir empleado");
+               PLN.out("==============");
+               Controlador.despedirEmpleado();
+               break;               
+        }        
     }
     /**
      * Método que gestiona la elección de opciones en los menús por parte del usuario.
