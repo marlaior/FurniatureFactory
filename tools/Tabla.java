@@ -79,7 +79,7 @@ public class Tabla{
 	       empleadoAux.getApellidos(), 
 	       empleadoAux.getPuesto(), 
 	       new SimpleDateFormat("dd/MM/yyyy").format(empleadoAux.getFechaAlta()), 
-	       "null"//new SimpleDateFormat("dd/MM/yyyy").format(empleadoAux.getFechaBaja())
+	       (empleadoAux.getFechaBaja() == null) ? "null" : new SimpleDateFormat("dd/MM/yyyy").format(empleadoAux.getFechaBaja())
 	    ));            
 	}
 	return formatearTabla(listas) + "\n";

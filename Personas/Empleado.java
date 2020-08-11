@@ -28,7 +28,8 @@ public class Empleado extends Persona{
     public Empleado(String usuario, String contrasena, String nombre, String apellidos, String telefono, String nif, String puesto, Double salarioBase){ 
         super(usuario, contrasena, nombre, apellidos, telefono, nif);
         this.puesto = puesto;
-        this.fechaAlta = new Date();        
+        this.fechaAlta = new Date();  
+        this.fechaBaja = null; 
         setIdEmpleado();
         saveEmpleado();
         
