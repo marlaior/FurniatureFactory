@@ -13,7 +13,6 @@ import fabrica.Controlador;
  */
 public class Cliente extends Persona{
     
-    protected static int num_clientes;
     protected int id_cliente;
     protected int id_comercial;
     
@@ -25,12 +24,22 @@ public class Cliente extends Persona{
         super(usuario, contraseña, nombre, apellidos, telefono, nif);
         this.id_comercial = id_comercial;
         setIdCliente();
+        saveCliente();
+    }
+    /**
+     * Método que almacena el cliente creado en el archivo de personas
+     */
+        private void saveCliente(){
+        ArrayList<Persona> personas = Controlador.loadPersonas();
+        personas.add(this);
+        Controlador.savePersonas(personas);
     }
     
     // ***** setters *****
     public void setIdCliente(){
-        num_clientes++;
-        this.id_cliente = num_clientes;
+        ArrayList<Cliente> clientes = Controlador.loadClientes();
+        this.id_cliente = clientes.size() + 1;
+
     }
     public void setComercial(int id_comercial){
         this.id_comercial = id_comercial;

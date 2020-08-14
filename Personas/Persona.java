@@ -45,6 +45,9 @@ public class Persona implements Serializable{
     public void setTelefono (String telefono){
         this.telefono = telefono;
     }
+    public void setNif (String nif){
+        this.nif = nif;
+    }
     
     // ***** getters *****
     public String getUsuario(){
@@ -61,5 +64,8 @@ public class Persona implements Serializable{
     }
     public String getTelefono(){
         return this.telefono;
+    }
+    public String getNif(){
+        return this.nif;
     }
 }

@@ -84,4 +84,25 @@ public class Tabla{
 	}
 	return formatearTabla(listas) + "\n";
     }
+    /**
+     * Metodo que muestra la lista de empleados de la fábrica.
+     * Esta tabla la puede consultar el Jefe
+     */
+    public static String listaClientes(ArrayList<Cliente> clientes) {
+        List<List<String>> listas = new ArrayList<>();
+	List<String> headers = Arrays.asList("ID Cliente", "nombre", "apellidos", "NIF/CIF", "teléfono"); // cabecera
+	List<String> separators = Arrays.asList("-----------", "------", "---------", "-------", "--------");
+	listas.add(headers);
+	listas.add(separators);
+	for (Cliente clienteAux : clientes) {
+	    listas.add((List<String>) Arrays.asList(
+	       String.valueOf(clienteAux.getIdCliente()), 
+	       clienteAux.getNombre(), 
+	       (clienteAux.getApellidos() != null) ? clienteAux.getApellidos() : "", 
+	       clienteAux.getNif(),
+	       (clienteAux.getTelefono() != null) ? clienteAux.getTelefono() : ""
+	    ));            
+	}
+	return formatearTabla(listas) + "\n";
+    }
 }
