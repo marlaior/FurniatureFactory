@@ -93,6 +93,19 @@ public class Controlador{
         }
         return empleados;
     }
+    /**
+     * Método que devuelve un arraylist con todos los clientes guardados en el fichero.
+     */
+    public static ArrayList<Cliente> loadClientes() {
+        ArrayList<Persona> personas = loadPersonas();
+        ArrayList<Cliente> clientes = new ArrayList<Cliente>();
+        for (Persona auxPersona : personas){
+            if(auxPersona instanceof Cliente){
+                clientes.add((Cliente)auxPersona);
+            }
+        }
+        return clientes;
+    }
 
     /**
      * Método que comprueba que exista los archivos de datos.
@@ -176,7 +189,7 @@ public class Controlador{
         personas.add(new ArtesanoPorHoras("trujillo", "pass", "Robert", "Trujillo", "666-123463", "12345686H"));
         personas.add(new ArtesanoPorHoras("kirk", "pass", "Kirk", "Hammett", "666-123464", "12345687I"));
         
-        //añadimos al arraylist objetos de tipo Empleado
+        //añadimos al arraylist objetos de tipo Cliente
         personas.add(new ClientePersona("lemmy", "pass", "Lemmy", "Kilmister", "666-123465", "12345688J", 3));
         personas.add(new ClientePersona("dio", "pass", "Ronnie", "James", "666-123466", "12345689K", 3));
         personas.add(new ClientePersona("ozzy", "pass", "Ozzy", "James", "666-123467", "12345690L", 4));
@@ -236,7 +249,7 @@ public class Controlador{
                PLN.out("LISTA DE EMPLEADOS");
                PLN.out("==================\n");
                Controlador.verListaEmpleados();
-               Menu.menuJefeEmpleados();
+               Menu.menuGestionEmpleados();
             case 1:
                 nuevoEmpleado = new Jefe(usuario, contrasena, nombre, apellidos, telefono, nif);
                 break;
@@ -252,7 +265,7 @@ public class Controlador{
         }  
         personas.add(nuevoEmpleado);
         savePersonas(personas);
-        Menu.menuJefeEmpleados();   
+        Menu.menuGestionEmpleados();   
     }
     /**
      * Método con el que el jefe despide a un empleado.
@@ -293,8 +306,29 @@ public class Controlador{
             PLN.out("No existe un usuario con ese Id.");
         }
         tools.Herramientas.enterParaContinuar();
-        Menu.menuJefeEmpleados();
+        Menu.menuGestionEmpleados();
     }
+    
+        // ********** Menu Comercial **********
+    
+    /**
+     * Método que permite al Comercial consultar la lista de todos los clientes a su cargo.
+     */
+    public static void verListaClientesComercial(int id_comercial){
+        ArrayList<Cliente> clientes = loadClientes();
+        ArrayList<Cliente> clientesComercial = new ArrayList<Cliente>();
+        for (Cliente auxCliente : clientes){
+            if(auxCliente.getIdComercial() == id_comercial){
+                clientesComercial.add(auxCliente);
+            }
+        }
+        if(clientesComercial.size()==0){
+            PLN.out("Su lista de clientes está vacía.\n¿Quiere inscribir su primer cliente?.");
+        }
+        else{
+            PLN.out(tools.Tabla.listaClientes(clientesComercial));             
+        }        
+    } 
     /**
      * Método que comprueba si el nick que pasamos como parámetro corresponde a algún usuario existente
      */

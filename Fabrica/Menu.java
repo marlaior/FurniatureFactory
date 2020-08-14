@@ -50,7 +50,7 @@ public class Menu{
                 menuJefe();
                 break;
             case "Comercial":
-                PLN.out("Te has logueado como Comercial");
+                menuComercial();
                 break;
             case "Artesano":
                 PLN.out("Te has logueado como Artesano");
@@ -112,6 +112,11 @@ public class Menu{
         }while(usuarioLogueado == null);
         selectMenu();
     }   
+    
+    // ******************************
+    // *            JEFE            *
+    // ******************************    
+    
     /**
      * Menú principal de opciones para el usuario Jefe
      */
@@ -119,39 +124,39 @@ public class Menu{
         opciones.clear();
         System.out.print('\u000C');
 
-    PLN.out("MENÚ PRINCIPAL");
-    PLN.out("==============");
-    opciones.add("\n0 = Salir de la aplicación");
-    opciones.add("1 = Cerrar sesión");
-    opciones.add("2 = Perfil");
-    opciones.add("3 = Gestión de empleados");
-    opciones.add("4 = Pedidos");
-
-    eleccionUsuario = elegirOpcion();
-
-    switch (eleccionUsuario) {
-        case 0: // el programa se cierra
-           System.out.print('\u000C');
-           PLN.out("Ha elegido finalizar el programa");
-           PLN.out("Hasta pronto");
-           PLN.out("\nPrograma finalizado");
-           System.exit(0);
-           break;
-        case 1: // cierra sesión y regresa al login
-           usuarioLogueado = null;
-           System.out.print('\u000C');
-           menuLogin();
-           break;
-        case 3: // consulta la lista de empleados
-           Menu.menuJefeEmpleados();
-           break;
-    }        
+        PLN.out("MENÚ PRINCIPAL");
+        PLN.out("==============");
+        opciones.add("\n0 = Salir de la aplicación");
+        opciones.add("1 = Cerrar sesión");
+        opciones.add("2 = Perfil");
+        opciones.add("3 = Gestión de empleados");
+        opciones.add("4 = Pedidos");
+    
+        eleccionUsuario = elegirOpcion();
+    
+        switch (eleccionUsuario) {
+            case 0: // el programa se cierra
+               System.out.print('\u000C');
+               PLN.out("Ha elegido finalizar el programa");
+               PLN.out("Hasta pronto");
+               PLN.out("\nPrograma finalizado");
+               System.exit(0);
+               break;
+            case 1: // cierra sesión y regresa al login
+               usuarioLogueado = null;
+               System.out.print('\u000C');
+               menuLogin();
+               break;
+            case 3: // consulta la lista de empleados
+               Menu.menuGestionEmpleados();
+               break;
+        }        
     }
     
     /**
      * Menú con el que el Jefe gestiona la lista de empleados
      */
-    public static void menuJefeEmpleados(){
+    public static void menuGestionEmpleados(){
         System.out.print('\u000C');
         PLN.out("LISTA DE EMPLEADOS");
         PLN.out("==================\n");
@@ -181,6 +186,77 @@ public class Menu{
                PLN.out("==============");
                Controlador.despedirEmpleado();
                break;               
+        }        
+    }
+    
+    // ******************************
+    // *          Comercial         *
+    // ******************************    
+    
+    /**
+     * Menú principal de opciones para el usuario Jefe
+     */
+    public static void menuComercial(){
+        opciones.clear();
+        System.out.print('\u000C');
+
+        PLN.out("MENÚ PRINCIPAL");
+        PLN.out("==============");
+        opciones.add("\n0 = Salir de la aplicación");
+        opciones.add("1 = Cerrar sesión");
+        opciones.add("2 = Gestión de perfil");
+        opciones.add("3 = Gestión de clientes");
+        opciones.add("4 = Gestión de pedidos");
+    
+        eleccionUsuario = elegirOpcion();
+    
+        switch (eleccionUsuario) {
+            case 0: // el programa se cierra
+               System.out.print('\u000C');
+               PLN.out("Ha elegido finalizar el programa");
+               PLN.out("Hasta pronto");
+               PLN.out("\nPrograma finalizado");
+               System.exit(0);
+               break;
+            case 1: // cierra sesión y regresa al login
+               usuarioLogueado = null;
+               System.out.print('\u000C');
+               menuLogin();
+               break;
+            case 3: // consulta la lista de clientes
+               Menu.menuGestionClientes();
+               break;
+        }        
+    }
+    
+    /**
+     * Menú con el que el COmercial gestiona la lista de clientes
+     */
+    public static void menuGestionClientes(){
+        System.out.print('\u000C');
+        PLN.out("LISTA DE CLIENTES");
+        PLN.out("=================\n");
+        PLN.out("ID logueado = " + ((Empleado)usuarioLogueado).getIdEmpleado());
+        Controlador.verListaClientesComercial(((Empleado)usuarioLogueado).getIdEmpleado());
+        opciones.clear();
+    
+        PLN.out("\n\nOpciones");
+        PLN.out("========");
+        opciones.add("\n0 = Volver al menú principal");
+        opciones.add("1 = Inscribir nuevo cliente");
+    
+        eleccionUsuario = elegirOpcion();
+    
+        switch (eleccionUsuario) {
+            case 0: // regresamos al menú principal del jefe
+               System.out.print('\u000C');
+               menuJefe();
+               break;
+            case 1: // se crea un nuevo cliente
+               PLN.out("\n\nNuevo empleado");
+               PLN.out("==============");
+               //Controlador.crearCliente();
+               break;            
         }        
     }
     /**

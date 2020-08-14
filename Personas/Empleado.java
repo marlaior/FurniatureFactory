@@ -13,8 +13,6 @@ import fabrica.Controlador;
  */
 public class Empleado extends Persona{
     
-    
-    protected static int num_empleados;
     protected int id_empleado;
     protected String puesto;
     protected Date fechaAlta = null;
@@ -35,6 +33,9 @@ public class Empleado extends Persona{
         
     }
     
+    /**
+     * Método que almacena el empleado creado en el archivo de personas
+     */
     private void saveEmpleado(){
         ArrayList<Persona> personas = Controlador.loadPersonas();
         personas.add(this);
@@ -58,17 +59,8 @@ public class Empleado extends Persona{
        this.fechaBaja = new Date();
     }
     public void setIdEmpleado(){
-        num_empleados = 1;
-        ArrayList<Persona> personas = Controlador.loadPersonas();
-        ArrayList<Empleado> empleados = new ArrayList<Empleado>();
-        int id = 0;
-        for (Persona auxPersona : personas){
-            if (auxPersona instanceof Empleado){
-                    num_empleados++;
-            }
-        }
-        this.id_empleado = num_empleados; 
-
+        ArrayList<Empleado> empleados = Controlador.loadEmpleados();
+        this.id_empleado = empleados.size() + 1;
     }
     
     // ***** getters *****
