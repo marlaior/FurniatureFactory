@@ -345,6 +345,86 @@ public class Controlador{
         return existe;
     }
     /**
+     * Método que permite al comercial inscribir un nuevo cliente a través de un formulario.
+     */
+    public static void crearCliente(int idComercial){
+        int tipoCliente = tipoCliente();
+        if (tipoCliente != 0){
+            ArrayList<Persona> personas = loadPersonas();
+            boolean existe = false;        
+            boolean correcto = false;            
+            Cliente nuevoCliente = null;   
+            String nombre = "";
+            if (tipoCliente == 1){
+                P.out("\nRAZÓN SOCIAL: ");
+                nombre = setDato("Razón social", false,  0, 0, 15);
+            }else{
+                P.out("\nNOMBRE: ");
+                nombre = setDato("nombre", false,  0, 0, 15);
+            }
+            String apellido = "";
+            if (tipoCliente != 1){
+                P.out("\nAPELLIDO: ");        
+                apellido = setDato("apellido", true,  0, 0, 15);                
+            }       
+            P.out("\nALIAS DE USUARIO: ");
+            String usuario = "";
+            do{
+                usuario = setDato("nick", false, 0, 0, 15);
+                existe = comprobarNick(usuario);
+            } while (existe);
+            String nif = "";
+            if (tipoCliente == 1){
+                P.out("\nC.I.F.: ");
+                nif = setDato("C.I.F.", false, 9, 0, 0);
+            }else{
+                P.out("\nN.I.F.: ");
+                nif = setDato("N.I.F", false, 9, 0, 0);
+            }
+            P.out("\nTELÉFONO: ");
+            String telefono = setDato("teléfono", true, 0, 0, 0);
+            String contacto = "";
+            if (tipoCliente == 1){
+                P.out("\nPERSONA DE CONTACTO EN LA EMPRESA: ");        
+                contacto = setDato("persona de contacto", true,  0, 0, 15);                
+            }
+            if(tipoCliente == 1){
+                nuevoCliente = new ClienteEmpresa(usuario, "pass", nombre, telefono, nif, idComercial, contacto);
+            }else{
+                nuevoCliente = new ClientePersona(usuario, "pass", nombre, apellido, telefono, nif, idComercial);
+            }
+            personas.add(nuevoCliente);
+            savePersonas(personas);
+        }
+        Menu.menuGestionClientes();        
+    }
+    /**
+     * Método que permita que el usuario establezca el tipo de cliente que quiere inscribir
+     */
+    private static boolean tipoCLiente(){
+        boolean isEmpresa = false;
+        boolean correcto = false;
+        String respuesta = "";
+        PLN.out("¿Es el cliente una Empresa o una persona física?");
+        P.out("'e' = Empresa / 'p' = Persona física");
+        do{
+            try{
+                respuesta = scanner.nextLine();
+                if (respuesta.equalsIgnoreCase("e")){
+                    correcto = true;
+                    isEmpresa = true;
+                }else if(respuesta.equalsIgnoreCase("p")){
+                    correcto = true;
+                    isEmpresa = false;
+                }else correcto = false;
+            }catch(Exception e){
+                PLN.out("El dato introducido no es correcto. Inténtelo de nuevo.");
+                correcto = false;
+            }            
+        }while(!correcto);
+        return isEmpresa;
+    }
+    /**
      * Método que permite que el usuario establezca el valor de un atributo estableciendo unos límites al valor.
      */
     private static String setDato(String campo, boolean nulo, int exacto, int min, int max){
@@ -405,6 +485,34 @@ public class Controlador{
         } while (!allRight);
         return eleccionUsuario;
     }
+    /**
+     * Método para que el usuario indique si el cliente con el que está trabajando es una persona física o una empresa.
+     * Se admiten tres valores 1= empresa, 2 = persona física y 0 = cancelar todo el proceso.
+     */    
+    private static int tipoCliente(){
+        int tipo = -1;
+        PLN.out("Indique el tipo de cliente");
+        do {           
+            try {
+                P.out("0 = CANCELAR / 1 = EMPRESA / 2 = PERSONA: ");
+                tipo = scanner.nextInt();
+                scanner.nextLine(); // limpia pulsaciones residuales de cara a posibles sucesiones.
+                
+                if (tipo != 0 && tipo != 1 && tipo != 2) {
+                    tipo = -1;
+                }
+            } catch (Exception e) {
+                tipo = -1;
+            }
+            if(tipo != 0 && tipo != 1 && tipo != 2) {
+                PLN.out("\nOpción incorrecta. Inténtelo de nuevo.");
+            }
+        } while (tipo != 0 && tipo != 1 && tipo != 2);
+        return tipo;        
+    }
+    /**
+     * Método para que el usuario indique un id de empleado32wedx
+     */
     public static int seleccionarIdEmpleado() {        
         ArrayList<Persona> personas = loadPersonas();
         int id = -1;

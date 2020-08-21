@@ -230,7 +230,7 @@ public class Menu{
     }
     
     /**
-     * Menú con el que el COmercial gestiona la lista de clientes
+     * Menú con el que el Comercial gestiona la lista de clientes
      */
     public static void menuGestionClientes(){
         System.out.print('\u000C');
@@ -253,10 +253,11 @@ public class Menu{
                menuJefe();
                break;
             case 1: // se crea un nuevo cliente
-               PLN.out("\n\nNuevo empleado");
-               PLN.out("==============");
-               //Controlador.crearCliente();
-               break;            
+               PLN.out("\n\nFormulario nuevo cliente");
+               PLN.out("========================");
+               Controlador.crearCliente(((Empleado)usuarioLogueado).getIdEmpleado());
+               break;   
+
         }        
     }
     /**
