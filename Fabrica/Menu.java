@@ -6,6 +6,7 @@ import personas.Empleado;
 import java.util.ArrayList;
 import java.util.Scanner;
 import tools.SoutIF;
+import tools.Tabla;
 
 /**
  * Clase que desplegará los menús por los que transitará toda la aplicación
@@ -59,13 +60,13 @@ public class Menu{
                 PLN.out("Te has logueado como Empleado");
                 break;
             case "ClienteEmpresa":
-                PLN.out("Te has logueado como Cliente tipo empresa");
+                menuCliente();
                 break;
             case "ClientePersona":
-                PLN.out("Te has logueado como Cliente tipo persona");
+                menuCliente();
                 break;
             case "Cliente":
-                PLN.out("Te has logueado como Cliente");
+                menuCliente();
                 break;
             case "Persona":
                 PLN.out("Te has logueado como Persona");
@@ -260,6 +261,52 @@ public class Menu{
 
         }        
     }
+    
+    // ******************************
+    // *            CLIENTE         *
+    // ******************************    
+    
+    /**
+     * Menú principal de opciones para el usuario Cliente
+     */
+    public static void menuCliente(){
+        opciones.clear();
+        System.out.print('\u000C');
+
+        PLN.out("MENÚ PRINCIPAL");
+        PLN.out("==============");
+        opciones.add("\n0 = Salir de la aplicación");
+        opciones.add("1 = Cerrar sesión");
+        opciones.add("2 = Perfil");
+        opciones.add("3 = Catálogo de muebles");
+        opciones.add("4 = Pedidos");
+    
+        eleccionUsuario = elegirOpcion();
+        System.out.print('\u000C');
+    
+        switch (eleccionUsuario) {
+            case 0: // el programa se cierra
+               PLN.out("Ha elegido finalizar el programa");
+               PLN.out("Hasta pronto");
+               PLN.out("\nPrograma finalizado");
+               System.exit(0);
+               break;
+            case 1: // cierra sesión y regresa al login
+               usuarioLogueado = null;
+               menuLogin();
+               break;
+            case 3: // consulta el catálogo de muebles
+                PLN.out("CATÁLOGO DE MUEBLES");
+                PLN.out("===================");
+                PLN.out(Tabla.catalogoMuebles());
+                break;
+        }        
+    }
+    
+    // ******************************
+    // *   MÉTODOS DE USO GENERAL   *
+    // ******************************    
+    
     /**
      * Método que gestiona la elección de opciones en los menús por parte del usuario.
      */
