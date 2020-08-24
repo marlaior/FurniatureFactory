@@ -105,4 +105,29 @@ public class Tabla{
 	}
 	return formatearTabla(listas) + "\n";
     }
+    /**
+     * Método que devuelve el catálogo de muebles
+     */
+    public static String catalogoMuebles() {
+        List<List<String>> listas = new ArrayList<>();
+	List<String> headers = Arrays.asList("ID MODELO", "DESCRIPCIÓN MUEBLE", "PRECIO"); // cabecera
+	List<String> separators = Arrays.asList("---------", "------------------", "------");
+	listas.add(headers);
+	listas.add(separators);
+	listas.add((List<String>) Arrays.asList("01", "Mueble genérico", ""));
+	listas.add((List<String>) Arrays.asList("02", "Mesa genérica", ""));
+	listas.add((List<String>) Arrays.asList("03", "Mesa café básica", ""));
+	listas.add((List<String>) Arrays.asList("04", "Mesa café de cristal", ""));
+	listas.add((List<String>) Arrays.asList("05", "Mesa café de madera", ""));
+	listas.add((List<String>) Arrays.asList("06", "Mesa de dormitorio", ""));
+	listas.add((List<String>) Arrays.asList("07", "Mesa de comedor", ""));
+	listas.add((List<String>) Arrays.asList("08", "Silla genérica", ""));
+	listas.add((List<String>) Arrays.asList("09", "Silla de cocina", ""));
+	listas.add((List<String>) Arrays.asList("10", "Silla de oficina básica", ""));
+	listas.add((List<String>) Arrays.asList("11", "Silla de oficina con ruedas", ""));
+	listas.add((List<String>) Arrays.asList("12", "Silla de oficina sin ruedas", ""));
+	listas.add((List<String>) Arrays.asList("13", "Silla plegable", ""));
+	
+	return formatearTabla(listas) + "\n";
+    }
 }
