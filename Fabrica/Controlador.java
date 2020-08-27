@@ -14,6 +14,7 @@ import java.util.Date;
 import tools.SoutIF;
 import personas.*;
 import muebles.*;
+import pedidos.*;
 
 /**
  * Clase que controla las distintas operaciones sobre ficheros
@@ -28,14 +29,14 @@ public class Controlador{
     private static ArrayList<String> opciones = new ArrayList<String>();
     private static int eleccionUsuario;
     private static final String RUTAFICHERO_PERSONAS = "personas.dat";
-    private static final String RUTAFICHERO_MUEBLES = "muebles.dat";
+    private static final String RUTAFICHERO_PEDIDOS = "pedidos.dat";
     private static final File FICHERO_PERSONAS = new File(RUTAFICHERO_PERSONAS);
-    private static final File FICHERO_MUEBLES = new File(RUTAFICHERO_MUEBLES);
+    private static final File FICHERO_PEDIDOS = new File(RUTAFICHERO_PEDIDOS);
     
     // ********** GESTIÓN DE ARCHIVOS **********
     
     /**
-     * Crea el archivo de datos en el que se va a almacenar el array-list de personas
+     * Crea el archivo de datos en el que se va a almacenar el arraylist de personas
      */
     public static void createArchivoPersonas() { 
         try {
@@ -44,7 +45,21 @@ public class Controlador{
             outputStream.writeObject(new ArrayList<Persona>());
             outputStream.close();
         } catch (Exception e) {
-            PELN.out("No existe el archivo de datos y no se ha podido crear uno nuevo");
+            PELN.out("No existe el archivo de personas y no se ha podido crear uno nuevo");
+            PELN.out("Inténtelo de nuevo");
+        }
+    }
+    /**
+     * Crea el archivo de datos en el que se va a almacenar el arraylist de pedidos
+     */
+    public static void createArchivoPedidos() { 
+        try {
+            FICHERO_PEDIDOS.createNewFile();
+            ObjectOutputStream outputStream = new ObjectOutputStream(new FileOutputStream(FICHERO_PEDIDOS));
+            outputStream.writeObject(new ArrayList<Pedido>());
+            outputStream.close();
+        } catch (Exception e) {
+            PELN.out("No existe el archivo de pedidos y no se ha podido crear uno nuevo");
             PELN.out("Inténtelo de nuevo");
         }
     }
@@ -55,6 +70,20 @@ public class Controlador{
         try {
             ObjectOutputStream outputStream = new ObjectOutputStream(new FileOutputStream(RUTAFICHERO_PERSONAS));
             outputStream.writeObject(personas);
+            outputStream.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+            PELN.out("Error al intentar guardar los datos");
+            PELN.out("Inténtelo de nuevo.");
+        }
+    }
+    /**
+     * Método que permite guardar en un fichero el arraylist de pedidos que se le pasa por parámetro.
+     */
+    public static void savePedidos(ArrayList<Pedido> pedidos){
+        try {
+            ObjectOutputStream outputStream = new ObjectOutputStream(new FileOutputStream(RUTAFICHERO_PEDIDOS));
+            outputStream.writeObject(pedidos);
             outputStream.close();
         } catch (IOException e) {
             e.printStackTrace();
@@ -78,6 +107,23 @@ public class Controlador{
             e.getMessage();
         }
         return personas;
+    }
+    /**
+     * Método que devuelve un arraylist con todas las personas guardadas en el fichero.
+     */
+    public static ArrayList<Pedido> loadPedidos() {
+        ArrayList<Pedido> pedidos = null;
+        try {
+            ObjectInputStream inputStream = new ObjectInputStream(new FileInputStream(RUTAFICHERO_PEDIDOS));
+            pedidos = (ArrayList<Pedido>) inputStream.readObject();
+            inputStream.close();
+        } catch (Exception e) {
+            pedidos = new ArrayList<Pedido>();
+            PELN.out("Error al importar el fichero");
+            e.printStackTrace();
+            e.getMessage();
+        }
+        return pedidos;
     }
     
     /**
@@ -118,59 +164,16 @@ public class Controlador{
         }
     }     
     /**
-     * Crea el archivo de datos en el que se va a almacenar el array-list de muebles
-     */
-    public static void createArchivoMuebles() { 
-        try {
-            FICHERO_MUEBLES.createNewFile();
-            ObjectOutputStream outputStream = new ObjectOutputStream(new FileOutputStream(FICHERO_MUEBLES));
-            outputStream.writeObject(new ArrayList<Mueble>());
-            outputStream.close();
-        } catch (Exception e) {
-            PELN.out("No existe el archivo de datos y no se ha podido crear uno nuevo");
-            PELN.out("Inténtelo de nuevo");
-        }
-    }
-    /**
-     * Método que permite guardar en un fichero el arraylist de empleados que se le pasa por parámetro.
-     */
-    public static void saveMuebles(ArrayList<Mueble> muebles){
-        try {
-            ObjectOutputStream outputStream = new ObjectOutputStream(new FileOutputStream(RUTAFICHERO_MUEBLES));
-            outputStream.writeObject(muebles);
-            outputStream.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-            PELN.out("Error al intentar guardar los datos");
-            PELN.out("Inténtelo de nuevo.");
-        }
-    }
-    /**
-     * Método que devuelve un arraylist con todos los muebles guardados en el fichero.
-     */
-    public static ArrayList<Mueble> loadMuebles() {
-        ArrayList<Mueble> muebles = null;
-        try {
-            ObjectInputStream inputStream = new ObjectInputStream(new FileInputStream(RUTAFICHERO_MUEBLES));
-            muebles = (ArrayList<Mueble>) inputStream.readObject();
-            inputStream.close();
-        } catch (Exception e) {
-            muebles = new ArrayList<Mueble>();
-            PELN.out("Error al importar el fichero");
-            e.printStackTrace();
-            e.getMessage();
-        }
-        return muebles;
-    }
-    /**
      * Método que comprueba que exista los archivos de datos.
-     * En caso de que no existan estos archivos, los crea con datos iniciales para poder realizar las pruebas.
+     * En caso de que no existan estos archivos, los crea.
      */
-    public static void checkFicheroMuebles() {
-        if (!FICHERO_MUEBLES.exists()) {
-            createArchivoMuebles();
+    public static void checkFicheroPedidos() {
+        if (!FICHERO_PEDIDOS.exists()) {
+            createArchivoPedidos();
         }
-    }    
+    }
+
+
     /**
      * Método que genera datos iniciales con los que testear la aplicación
      */
@@ -199,9 +202,9 @@ public class Controlador{
         personas.add(new ClienteEmpresa("rubber", "pass", "Rubber Factory", "666-123471", "A12345694", 4, "Dan Auerbach"));
         personas.add(new ClienteEmpresa("fabfour", "pass", "The Fab Four", "666-123472", "A12345695", 4, "Richard Starkey"));
         
-        //creamos el arraylist de muebles(vacío) y lo añadimos al fichero
-        ArrayList<Mueble> muebles = new ArrayList<Mueble>();
-        saveMuebles(muebles);
+        //creamos el arraylist de pedidos(vacío) y lo añadimos al fichero
+        ArrayList<Pedido> pedidos = new ArrayList<Pedido>();
+        savePedidos(pedidos);
     }
     
     // ********** Menu Jefe **********
@@ -455,7 +458,153 @@ public class Controlador{
         } while (!right);        
         return valor;
     }
+    // ********** Menu cliente **********
+    /**
+     * Método que diseña un formulario de compra de muebles por parte de un cliente
+     */
+    public static void comprarMuebles(int id_cliente){
+        boolean pedidoTerminado = false;
+        ArrayList<Cliente> clientes = loadClientes();
+        ArrayList<Pedido> pedidos = loadPedidos();
+        ArrayList<Mueble> muebles = new ArrayList<Mueble>();
+        Cliente cliente = null;
+        
+        for (Cliente clienteAux : clientes){
+            if (clienteAux.getIdCliente() == id_cliente){
+                cliente = clienteAux;
+                break;
+            }
+        }      
+        do{
+            int idMueble = seleccionarIdMueble();
+            int cantidad = 0;
+      
+            switch (idMueble){
+                case 0: 
+                    PLN.out("¿Finalizar el pedido?");
+                    boolean salir = tools.Herramientas.confirmarDecision();                    
+                    if(salir){
+                        pedidoTerminado = true;
+                    }
+                    break;
+                case 1:
+                    cantidad = setCantidad();
+                    if (cantidad != 0){
+                        for (int i = 0; i < cantidad; i++){
+                            muebles.add(new Mueble(cliente));                        
+                        }                    
+                    }                    
+                    break;
+                case 2:
+                    cantidad = setCantidad();
+                    if (cantidad != 0){
+                        for (int i = 0; i < cantidad; i++){
+                            muebles.add(new Mesa(cliente));                        
+                        }                    
+                    }
+                    break;
+                case 3:
+                    cantidad = setCantidad();
+                    if (cantidad != 0){
+                        for (int i = 0; i < cantidad; i++){
+                            muebles.add(new MesaCafe(cliente));                        
+                        }                    
+                    }
+                    break;
+                case 4:
+                    cantidad = setCantidad();
+                    if (cantidad != 0){
+                        for (int i = 0; i < cantidad; i++){
+                            muebles.add(new MesaCafeCristal(cliente));                        
+                        }                    
+                    }
+                    break;
+                case 5:
+                    cantidad = setCantidad();
+                    if (cantidad != 0){
+                        for (int i = 0; i < cantidad; i++){
+                            muebles.add(new MesaCafeMadera(cliente));                        
+                        }                    
+                    }
+                    break;
+                case 6:
+                    cantidad = setCantidad();
+                    if (cantidad != 0){
+                        for (int i = 0; i < cantidad; i++){
+                            muebles.add(new MesaDormitorio(cliente));                        
+                        }                    
+                    }
+                    break;
+                case 7:
+                    cantidad = setCantidad();
+                    if (cantidad != 0){
+                        for (int i = 0; i < cantidad; i++){
+                            muebles.add(new MesaComedor(cliente));                        
+                        }                    
+                    }
+                    break;
+                case 8:
+                    cantidad = setCantidad();
+                    if (cantidad != 0){
+                        for (int i = 0; i < cantidad; i++){
+                            muebles.add(new Silla(cliente));                        
+                        }                    
+                    }
+                    break;
+                case 9:
+                    cantidad = setCantidad();
+                    if (cantidad != 0){
+                        for (int i = 0; i < cantidad; i++){
+                            muebles.add(new SillaCocina(cliente));                        
+                        }                    
+                    }
+                    break;
+                case 10:
+                    cantidad = setCantidad();
+                    if (cantidad != 0){
+                        for (int i = 0; i < cantidad; i++){
+                            muebles.add(new SillaOficina(cliente));                        
+                        }                    
+                    }
+                    break;
+                case 11:
+                    cantidad = setCantidad();
+                    if (cantidad != 0){
+                        for (int i = 0; i < cantidad; i++){
+                            muebles.add(new SillaOficinaConRuedas(cliente));                        
+                        }                    
+                    }
+                    break;
+                case 12:
+                    cantidad = setCantidad();
+                    if (cantidad != 0){
+                        for (int i = 0; i < cantidad; i++){
+                            muebles.add(new SillaOficinaSinRuedas(cliente));                        
+                        }                    
+                    }
+                    break;
+                case 13:
+                    cantidad = setCantidad();
+                    if (cantidad != 0){
+                        for (int i = 0; i < cantidad; i++){
+                            muebles.add(new SillaPlegable(cliente));                        
+                        }                    
+                    }
+                    break;         
+            }       
+        }while(!pedidoTerminado);
+        if (muebles.size() > 0) {
+            Pedido pedido = new Pedido(muebles, cliente);
+            pedidos.add(pedido);
+            savePedidos(pedidos);
+        }
+    }
     
+    // ********** Métodos generales **********
+    
+    /**
+     * Método que gestiona la elección de una opción del menú por parte del usuario, retornando la opción elegida
+     */    
     public static int elegirOpcion() {
         for (String string : opciones) {
             PLN.out(string);
@@ -527,7 +676,6 @@ public class Controlador{
                     PLN.out("No existen Ids negativos");
                 } else {                   
                     allRight = true;
-                    PLN.out("allRight = " + allRight);
                 }
             } catch (Exception e) {
                 PLN.out("Valor incorrecto.");
@@ -540,5 +688,59 @@ public class Controlador{
         } while (!allRight);
         return id;
     }    
+    /**
+     * Método para que el usuario indique un id de mueble
+     */
+    public static int seleccionarIdMueble() {        
+        int id = -1;
+        boolean allRight = false;
+        P.out("Indique el id del mueble (0 = Terminar pedido): ");
+        do {           
+            try {
+                id = scanner.nextInt();
+                scanner.nextLine(); // limpia pulsaciones residuales de cara a posibles sucesiones.
+                if (id < 0 || id > 13) {
+                    PLN.out("No hay muebles con ese id.");
+                } else {                   
+                    allRight = true;
+                }
+            } catch (Exception e) {
+                PLN.out("Valor incorrecto.");
+                id = -1;
+                scanner.nextLine();
+            }
+            if(!allRight) {
+                P.out("Indique otro Id: ");
+            }
+        } while (!allRight);
+        return id;
+    }   
+    /**
+     * Método que sirve para que el cliente indique la cantidad de muebles que quiere comprar
+     */
+    public static int setCantidad(){
+        int cantidad = 0;
+        boolean allRight = false;
+        P.out("Cantidad (0: ");
+        do {           
+            try {
+                cantidad = scanner.nextInt();
+                scanner.nextLine(); // limpia pulsaciones residuales de cara a posibles sucesiones.
+                if (cantidad < 0) {
+                    PLN.out("No se permiten cantidades negativas");
+                }else {                   
+                    allRight = true;
+                }
+            } catch (Exception e) {
+                PLN.out("Valor incorrecto.");
+                cantidad = -1;
+                scanner.nextLine();
+            }
+            if(!allRight) {
+                P.out("Inténtelo de nuevo: ");
+            }
+        } while (!allRight);
+        return cantidad;
+    }
 
 }
