@@ -272,7 +272,6 @@ public class Menu{
     public static void menuCliente(){
         opciones.clear();
         System.out.print('\u000C');
-
         PLN.out("MENÚ PRINCIPAL");
         PLN.out("==============");
         opciones.add("\n0 = Salir de la aplicación");
@@ -299,10 +298,10 @@ public class Menu{
                 PLN.out("CATÁLOGO DE MUEBLES");
                 PLN.out("===================");
                 PLN.out(Tabla.catalogoMuebles());
+                Controlador.comprarMuebles(((Cliente)usuarioLogueado).getIdCliente());
                 break;
         }        
-    }
-    
+    }    
     // ******************************
     // *   MÉTODOS DE USO GENERAL   *
     // ******************************    

@@ -20,9 +20,9 @@ public class Mueble implements Serializable{
     protected String descripcion_mueble;
     protected Cliente cliente;
     protected Artesano artesano;
-    protected int tiempoEstimado; //estimacion de nº de horas de construcción
+    protected int tiempoEstimado = 1; //estimacion de nº de horas de construcción
     protected String anotaciones;
-    protected double precio;
+    protected double precio = 50;
     protected Date fechaCompra;
     protected Date fechaEntrega;
     
@@ -33,9 +33,25 @@ public class Mueble implements Serializable{
         this.estado = Mueble.Estado.PENDIENTE;
         this.descripcion_mueble = descripcion_mueble;
         this.cliente = cliente;
-        this.artesano = artesano;
-        this.tiempoEstimado = tiempoEstimado;
-        this.precio = precio;
+        this.artesano = null;
+        this.tiempoEstimado += tiempoEstimado;
+        this.precio += precio;
+        this.fechaCompra = new Date();
+        this.anotaciones = "Datos Cliente\n"
+            + "**********\n"
+            + this.cliente.getNombre() + this.cliente.getApellidos() + "\n"
+            + "tlfno: " + this.cliente.getTelefono() + "\n\n"
+            + "PEDIDO\n"
+            + "**********\n"
+            + "Tipo Mueble = " + this.descripcion_mueble + "\n"
+            + "Fecha de compra = " + this.fechaCompra + "\n"
+            + "Precio = " + this.precio + "\n\n";
+    }
+    public Mueble(Cliente cliente){
+        this.estado = Mueble.Estado.PENDIENTE;
+        this.descripcion_mueble = "MUEBLE GENÉRICO";
+        this.cliente = cliente;
+        this.artesano = null;
         this.fechaCompra = new Date();
         this.anotaciones = "Datos Cliente\n"
             + "**********\n"
