@@ -2,6 +2,7 @@ package pedidos;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Date;
 import muebles.Mueble;
 import personas.Cliente;
 import fabrica.Controlador;
@@ -13,21 +14,25 @@ import fabrica.Controlador;
  * @author Marcos Laíño Ordóñez
  */
 public class Pedido implements Serializable{
-    private static int numPedido;
+    private static final long serialVersionUID = 1L;
+    private int numPedido;
     private ArrayList<Mueble> muebles;
     private Cliente cliente;
+    private Date fechaCompra;
     
     /**
      * Constructor de la clase Pedido
      */
     public Pedido(ArrayList<Mueble> muebles, Cliente cliente){
-        setNumPedido();
         this.muebles = muebles;
         this.cliente = cliente;
+        this.fechaCompra = new Date();
+        setNumPedido();
     }
     
     // *********** getters ***********
-    public int getNumPed(){
+    
+    public int getNumPedido(){
         return this.numPedido;
     }
     public ArrayList<Mueble> getMuebles(){
@@ -37,7 +42,7 @@ public class Pedido implements Serializable{
         return this.cliente;
     }
     
-    // *********** getters ***********
+    // *********** setters ***********
     
     public void setNumPedido(){
         ArrayList<Pedido> pedidos = Controlador.loadPedidos();

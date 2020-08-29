@@ -21,7 +21,7 @@ import pedidos.*;
  * 
  * @author Marcos Laíño Ordóñez
  */
-public class Controlador{
+    public class Controlador{
     private static final SoutIF<String> PLN = (s) -> System.out.println(s);
     private static final SoutIF<String> P = (s) -> System.out.println(s);
     private static final SoutIF<String> PELN = (s) -> System.err.println(s);
@@ -32,7 +32,7 @@ public class Controlador{
     private static final String RUTAFICHERO_PEDIDOS = "pedidos.dat";
     private static final File FICHERO_PERSONAS = new File(RUTAFICHERO_PERSONAS);
     private static final File FICHERO_PEDIDOS = new File(RUTAFICHERO_PEDIDOS);
-    
+        
     // ********** GESTIÓN DE ARCHIVOS **********
     
     /**
@@ -124,8 +124,7 @@ public class Controlador{
             e.getMessage();
         }
         return pedidos;
-    }
-    
+    }        
     /**
      * Método que devuelve un arraylist con todos los empleados guardados en el fichero.
      */
@@ -151,8 +150,7 @@ public class Controlador{
             }
         }
         return clientes;
-    }
-
+    }    
     /**
      * Método que comprueba que exista los archivos de datos.
      * En caso de que no existan estos archivos, los crea con datos iniciales para poder realizar las pruebas.
@@ -171,9 +169,7 @@ public class Controlador{
         if (!FICHERO_PEDIDOS.exists()) {
             createArchivoPedidos();
         }
-    }
-
-
+    }   
     /**
      * Método que genera datos iniciales con los que testear la aplicación
      */
@@ -206,9 +202,9 @@ public class Controlador{
         ArrayList<Pedido> pedidos = new ArrayList<Pedido>();
         savePedidos(pedidos);
     }
-    
-    // ********** Menu Jefe **********
-    
+        
+        // ********** Menu Jefe **********
+        
     /**
      * Método que permite al Jefe consultar la lista de todos los empleados con los datos más relevantes
      */
@@ -311,9 +307,9 @@ public class Controlador{
         tools.Herramientas.enterParaContinuar();
         Menu.menuGestionEmpleados();
     }
-    
-        // ********** Menu Comercial **********
-    
+        
+            // ********** Menu Comercial **********
+        
     /**
      * Método que permite al Comercial consultar la lista de todos los clientes a su cargo.
      */
@@ -458,7 +454,9 @@ public class Controlador{
         } while (!right);        
         return valor;
     }
-    // ********** Menu cliente **********
+        
+                // ********** Menu cliente **********
+        
     /**
      * Método que diseña un formulario de compra de muebles por parte de un cliente
      */
@@ -468,140 +466,209 @@ public class Controlador{
         ArrayList<Pedido> pedidos = loadPedidos();
         ArrayList<Mueble> muebles = new ArrayList<Mueble>();
         Cliente cliente = null;
+        Mueble nuevoMueble = null;
+        int cantidad = 0;
+        int idMueble = -1; // id del modelo de mueble en el catálogo
+        int numSerie = 0;
         
         for (Cliente clienteAux : clientes){
             if (clienteAux.getIdCliente() == id_cliente){
                 cliente = clienteAux;
                 break;
             }
+        }
+        // comprobamos cuantos muebles se han construido para calcular el nº de serie del siguiente mueble
+        for(Pedido auxPedido : pedidos){
+            for(Mueble auxMueble : auxPedido.getMuebles()){
+                numSerie++;
+            }
         }      
         do{
-            int idMueble = seleccionarIdMueble();
-            int cantidad = 0;
-      
-            switch (idMueble){
-                case 0: 
-                    PLN.out("¿Finalizar el pedido?");
-                    boolean salir = tools.Herramientas.confirmarDecision();                    
-                    if(salir){
-                        pedidoTerminado = true;
-                    }
-                    break;
-                case 1:
-                    cantidad = setCantidad();
-                    if (cantidad != 0){
+            idMueble = seleccionarIdMueble(); 
+            if(idMueble == 0){
+                PLN.out("Ha elegido finalizar el pedido.");
+                boolean salir = tools.Herramientas.confirmarDecision();                    
+                if(salir){
+                    pedidoTerminado = true;
+                }
+            }else{       
+                cantidad = setCantidad();          
+                switch (idMueble){    
+                    case 1:
                         for (int i = 0; i < cantidad; i++){
-                            muebles.add(new Mueble(cliente));                        
-                        }                    
-                    }                    
-                    break;
-                case 2:
-                    cantidad = setCantidad();
-                    if (cantidad != 0){
+                            nuevoMueble = new Mueble(cliente);
+                            nuevoMueble.setNumSerie(numSerie);                        
+                            numSerie++;
+                            muebles.add(nuevoMueble);
+                        }                                                            
+                        break;
+                    case 2:
                         for (int i = 0; i < cantidad; i++){
-                            muebles.add(new Mesa(cliente));                        
-                        }                    
-                    }
-                    break;
-                case 3:
-                    cantidad = setCantidad();
-                    if (cantidad != 0){
+                            nuevoMueble = new Mesa(cliente); 
+                            nuevoMueble.setNumSerie(numSerie);                        
+                            numSerie++;
+                            muebles.add(nuevoMueble);
+                        }                                                
+                        break;
+                    case 3:                        
                         for (int i = 0; i < cantidad; i++){
-                            muebles.add(new MesaCafe(cliente));                        
-                        }                    
-                    }
-                    break;
-                case 4:
-                    cantidad = setCantidad();
-                    if (cantidad != 0){
+                            nuevoMueble = new MesaCafe(cliente);   
+                            nuevoMueble.setNumSerie(numSerie);                        
+                            numSerie++;
+                            muebles.add(nuevoMueble);
+                        } 
+                        break;
+                    case 4:                        
                         for (int i = 0; i < cantidad; i++){
-                            muebles.add(new MesaCafeCristal(cliente));                        
-                        }                    
-                    }
-                    break;
-                case 5:
-                    cantidad = setCantidad();
-                    if (cantidad != 0){
+                            nuevoMueble = new MesaCafeCristal(cliente);  
+                            nuevoMueble.setNumSerie(numSerie);                        
+                            numSerie++;
+                            muebles.add(nuevoMueble);
+                        } 
+                        break;
+                    case 5:                        
                         for (int i = 0; i < cantidad; i++){
-                            muebles.add(new MesaCafeMadera(cliente));                        
-                        }                    
-                    }
-                    break;
-                case 6:
-                    cantidad = setCantidad();
-                    if (cantidad != 0){
+                            nuevoMueble = new MesaCafeMadera(cliente);
+                            nuevoMueble.setNumSerie(numSerie);                        
+                            numSerie++;
+                            muebles.add(nuevoMueble);
+                        } 
+                        break;
+                    case 6:                         
                         for (int i = 0; i < cantidad; i++){
-                            muebles.add(new MesaDormitorio(cliente));                        
-                        }                    
-                    }
-                    break;
-                case 7:
-                    cantidad = setCantidad();
-                    if (cantidad != 0){
+                            nuevoMueble = new MesaDormitorio(cliente); 
+                            nuevoMueble.setNumSerie(numSerie);                        
+                            numSerie++;
+                            muebles.add(nuevoMueble);
+                        } 
+                        break;
+                    case 7:                        
                         for (int i = 0; i < cantidad; i++){
-                            muebles.add(new MesaComedor(cliente));                        
-                        }                    
-                    }
-                    break;
-                case 8:
-                    cantidad = setCantidad();
-                    if (cantidad != 0){
+                            nuevoMueble = new MesaComedor(cliente);  
+                            nuevoMueble.setNumSerie(numSerie);                        
+                            numSerie++;
+                            muebles.add(nuevoMueble);
+                        } 
+                        break;
+                    case 8:                        
                         for (int i = 0; i < cantidad; i++){
-                            muebles.add(new Silla(cliente));                        
-                        }                    
-                    }
-                    break;
-                case 9:
-                    cantidad = setCantidad();
-                    if (cantidad != 0){
+                            nuevoMueble = new Silla(cliente);  
+                            nuevoMueble.setNumSerie(numSerie);                        
+                            numSerie++;
+                            muebles.add(nuevoMueble);
+                        } 
+                        break;
+                    case 9:                        
                         for (int i = 0; i < cantidad; i++){
-                            muebles.add(new SillaCocina(cliente));                        
-                        }                    
-                    }
-                    break;
-                case 10:
-                    cantidad = setCantidad();
-                    if (cantidad != 0){
+                            nuevoMueble = new SillaCocina(cliente);  
+                            nuevoMueble.setNumSerie(numSerie);                        
+                            numSerie++;
+                            muebles.add(nuevoMueble);
+                        } 
+                        break;
+                    case 10:                        
                         for (int i = 0; i < cantidad; i++){
-                            muebles.add(new SillaOficina(cliente));                        
-                        }                    
-                    }
-                    break;
-                case 11:
-                    cantidad = setCantidad();
-                    if (cantidad != 0){
+                            nuevoMueble = new SillaOficina(cliente);  
+                            nuevoMueble.setNumSerie(numSerie);                        
+                            numSerie++;
+                            muebles.add(nuevoMueble);
+                        } 
+                        break;
+                    case 11:                        
                         for (int i = 0; i < cantidad; i++){
-                            muebles.add(new SillaOficinaConRuedas(cliente));                        
-                        }                    
-                    }
-                    break;
-                case 12:
-                    cantidad = setCantidad();
-                    if (cantidad != 0){
+                            nuevoMueble = new SillaOficinaConRuedas(cliente);  
+                            nuevoMueble.setNumSerie(numSerie);                        
+                            numSerie++;
+                            muebles.add(nuevoMueble);
+                        } 
+                        break;
+                    case 12:                         
                         for (int i = 0; i < cantidad; i++){
-                            muebles.add(new SillaOficinaSinRuedas(cliente));                        
-                        }                    
-                    }
-                    break;
-                case 13:
-                    cantidad = setCantidad();
-                    if (cantidad != 0){
+                            nuevoMueble = new SillaOficinaSinRuedas(cliente);
+                            nuevoMueble.setNumSerie(numSerie);                        
+                            numSerie++;
+                            muebles.add(nuevoMueble);
+                        } 
+                        break;
+                    case 13:                        
                         for (int i = 0; i < cantidad; i++){
-                            muebles.add(new SillaPlegable(cliente));                        
-                        }                    
-                    }
-                    break;         
-            }       
+                            nuevoMueble = new SillaPlegable(cliente);
+                            nuevoMueble.setNumSerie(numSerie);                        
+                            numSerie++;
+                            muebles.add(nuevoMueble);
+                        } 
+                        break;         
+                }       
+            }
         }while(!pedidoTerminado);
+                
         if (muebles.size() > 0) {
-            Pedido pedido = new Pedido(muebles, cliente);
-            pedidos.add(pedido);
+            Pedido nuevoPedido = new Pedido(muebles, cliente);
+            PLN.out("Creado pedido nº " + nuevoPedido.getNumPedido());
+            pedidos.add(nuevoPedido);
             savePedidos(pedidos);
+            pedidos = loadPedidos();
+            for(Pedido auxPedido : pedidos){
+                PLN.out("Nº Pedido = "+auxPedido.getNumPedido());
+            }            
         }
     }
-    
-    // ********** Métodos generales **********
-    
+    /**
+     * Método que permite consultar los pedidos del cliente cuyo id se pasa por parámetro
+     * El método consulta la lista de pedidos del cliente y devuelve true o false según tenga o no tenga pedidos.
+     * Además, en caso de tener pedidos, imprime una tabla con la lista de pedidos y su estado actual.
+     */
+    public static boolean consultaPedidosCliente(int id_cliente){
+        ArrayList<Cliente> clientes = loadClientes();
+        ArrayList<Pedido> pedidos = loadPedidos();
+        ArrayList<Pedido> pedidosCliente = new ArrayList<Pedido>();
+        Cliente cliente = null;
+        boolean tienePedidos = false;
+        
+        for (Cliente clienteAux : clientes){
+            if (clienteAux.getIdCliente() == id_cliente){
+                cliente = clienteAux;
+                break;
+            }
+        }
+        for (Pedido auxPedido : pedidos){
+            if (auxPedido.getCliente().getIdCliente() == id_cliente){
+                pedidosCliente.add(auxPedido);                
+            }
+        }
+        if (pedidosCliente.size() == 0){
+            tienePedidos = false;
+        }else{
+            PLN.out(tools.Tabla.listaPedidosCliente(pedidosCliente));
+            tienePedidos = true;
+        }
+        return tienePedidos;
+    }
+    /**
+     * Método que muestra la lista de muebles de un pedido cuyo id se pasa como parámetro
+     */
+    public static void consultaListaMueblesPedido(int numPedido, int id_cliente){
+        ArrayList<Pedido> pedidos = loadPedidos();
+        Pedido pedido = null;
+        for (Pedido auxPedido : pedidos){
+            if(auxPedido.getNumPedido() == numPedido && auxPedido.getCliente().getIdCliente() == id_cliente){
+                pedido = auxPedido;
+                break;
+            }
+            
+        }
+        if (pedido == null){
+            PLN.out("No se han encontrado datos");
+        }else{
+            System.out.print('\u000C');
+            PLN.out("\nPEDIDO Nº " + pedido.getNumPedido());
+            PLN.out("===============");
+            PLN.out(tools.Tabla.listaMueblesPedido(pedido.getMuebles()));                
+        }
+    }
+
+        // ********** Métodos generales **********
+
     /**
      * Método que gestiona la elección de una opción del menú por parte del usuario, retornando la opción elegida
      */    
@@ -660,7 +727,7 @@ public class Controlador{
         return tipo;        
     }
     /**
-     * Método para que el usuario indique un id de empleado32wedx
+     * Método para que el usuario indique un id de empleado
      */
     public static int seleccionarIdEmpleado() {        
         ArrayList<Persona> personas = loadPersonas();
@@ -721,7 +788,7 @@ public class Controlador{
     public static int setCantidad(){
         int cantidad = 0;
         boolean allRight = false;
-        P.out("Cantidad (0: ");
+        P.out("Cantidad: ");
         do {           
             try {
                 cantidad = scanner.nextInt();
@@ -742,5 +809,4 @@ public class Controlador{
         } while (!allRight);
         return cantidad;
     }
-
 }
