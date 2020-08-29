@@ -3,6 +3,7 @@ package fabrica;
 import personas.Persona;
 import personas.Cliente;
 import personas.Empleado;
+import pedidos.Pedido;
 import java.util.ArrayList;
 import java.util.Scanner;
 import tools.SoutIF;
@@ -277,8 +278,8 @@ public class Menu{
         opciones.add("\n0 = Salir de la aplicación");
         opciones.add("1 = Cerrar sesión");
         opciones.add("2 = Perfil");
-        opciones.add("3 = Catálogo de muebles");
-        opciones.add("4 = Pedidos");
+        opciones.add("3 = Tienda");
+        opciones.add("4 = Mis pedidos");
     
         eleccionUsuario = elegirOpcion();
         System.out.print('\u000C');
@@ -299,9 +300,39 @@ public class Menu{
                 PLN.out("===================");
                 PLN.out(Tabla.catalogoMuebles());
                 Controlador.comprarMuebles(((Cliente)usuarioLogueado).getIdCliente());
+                menuCliente();
                 break;
-        }        
-    }    
+            case 4: // consulta el estado de los pedidos
+                PLN.out("MIS PEDIDOS");
+                PLN.out("===========");
+                boolean tienePedidos = Controlador.consultaPedidosCliente(((Cliente)usuarioLogueado).getIdCliente());
+                if (!tienePedidos){
+                    PLN.out("Todavía no tiene pedidos");
+                    tools.Herramientas.enterParaContinuar();
+                    menuCliente();
+                }
+                else{
+                    menuPedidosCliente();                    
+                }
+                break;
+        }          
+    }   
+    /**
+     * Método que muestra las opciones del cliente sobre su lista de pedidos
+     */
+    private static void menuPedidosCliente(){
+
+        int numPedido = seleccionarNumPedido();
+
+    
+        if(numPedido != 0){
+            Controlador.consultaListaMueblesPedido(numPedido, ((Cliente)usuarioLogueado).getIdCliente());     
+            tools.Herramientas.enterParaContinuar();
+        }
+        menuCliente();
+    }
+    
+
     // ******************************
     // *   MÉTODOS DE USO GENERAL   *
     // ******************************    
@@ -338,4 +369,43 @@ public class Menu{
         } while (!allRight);
         return eleccionUsuario;
     }
+    /**
+     * Método para que el usuario seleccione un número de pedido
+     */
+    public static int seleccionarNumPedido() {        
+        int num = -1;
+        ArrayList<Pedido> pedidos = Controlador.loadPedidos();
+        ArrayList<Pedido> pedidosCliente = new ArrayList<Pedido>();
+        
+        boolean allRight = false;
+        P.out("Indique número de pedido (0 = Regresar): ");
+        do {           
+            try {
+                num = scanner.nextInt();
+                scanner.nextLine(); // limpia pulsaciones residuales de cara a posibles sucesiones.
+                if (num < 0) {
+                    PLN.out("No tiene ningún pedido con ese id.");
+                } else if (num == 0){                   
+                    allRight = true;
+                }else{
+                    for (Pedido auxPedido : pedidos){
+                        if (num == auxPedido.getNumPedido() && auxPedido.getCliente().getIdCliente() == ((Cliente)usuarioLogueado).getIdCliente()){
+                            allRight = true;
+                        }
+                    }
+                    if(!allRight){
+                        PLN.out("No tiene ningún pedido con ese id.");
+                    }
+                }
+            } catch (Exception e) {
+                PLN.out("Valor incorrecto.");
+                scanner.nextLine();
+            }
+            if(!allRight) {
+                P.out("Indique otro Id: ");
+                num = -1;
+            }
+        } while (!allRight);
+        return num;
+    }   
 }
