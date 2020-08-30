@@ -117,19 +117,19 @@ public class Tabla{
         List<String> separators = Arrays.asList("---------", "------------------", "------");
         listas.add(headers);
         listas.add(separators);
-        listas.add((List<String>) Arrays.asList("01", "Mueble genérico", ""));
-        listas.add((List<String>) Arrays.asList("02", "Mesa genérica", ""));
-        listas.add((List<String>) Arrays.asList("03", "Mesa café básica", ""));
-        listas.add((List<String>) Arrays.asList("04", "Mesa café de cristal", ""));
-        listas.add((List<String>) Arrays.asList("05", "Mesa café de madera", ""));
-        listas.add((List<String>) Arrays.asList("06", "Mesa de dormitorio", ""));
-        listas.add((List<String>) Arrays.asList("07", "Mesa de comedor", ""));
-        listas.add((List<String>) Arrays.asList("08", "Silla genérica", ""));
-        listas.add((List<String>) Arrays.asList("09", "Silla de cocina", ""));
-        listas.add((List<String>) Arrays.asList("10", "Silla de oficina básica", ""));
-        listas.add((List<String>) Arrays.asList("11", "Silla de oficina con ruedas", ""));
-        listas.add((List<String>) Arrays.asList("12", "Silla de oficina sin ruedas", ""));
-        listas.add((List<String>) Arrays.asList("13", "Silla plegable", ""));
+        listas.add((List<String>) Arrays.asList("01", "Mueble genérico", "50,00€"));
+        listas.add((List<String>) Arrays.asList("02", "Mesa genérica", "250,00€"));
+        listas.add((List<String>) Arrays.asList("03", "Mesa café básica", "275,00€"));
+        listas.add((List<String>) Arrays.asList("04", "Mesa café de cristal", "325,00€"));
+        listas.add((List<String>) Arrays.asList("05", "Mesa café de madera", "295,00€"));
+        listas.add((List<String>) Arrays.asList("06", "Mesa de dormitorio", "310,00€"));
+        listas.add((List<String>) Arrays.asList("07", "Mesa de comedor", "400,00€"));
+        listas.add((List<String>) Arrays.asList("08", "Silla genérica", "150,00€"));
+        listas.add((List<String>) Arrays.asList("09", "Silla de cocina", "180,00€"));
+        listas.add((List<String>) Arrays.asList("10", "Silla de oficina básica", "230,00€"));
+        listas.add((List<String>) Arrays.asList("11", "Silla de oficina con ruedas", "330,00€"));
+        listas.add((List<String>) Arrays.asList("12", "Silla de oficina sin ruedas", "250,00€"));
+        listas.add((List<String>) Arrays.asList("13", "Silla plegable", "160,00€"));
         
         return formatearTabla(listas) + "\n";
     }
@@ -188,6 +188,65 @@ public class Tabla{
                 auxMueble.getDescripcionMueble(), 
                 String.valueOf(auxMueble.getEstado()), 
                 decimalFormat.format(auxMueble.getPrecio())));          
+        }
+        return formatearTabla(listas) + "\n";
+    }
+    /**
+     * Metodo que imprime una tabla con los pedidos de un cliente
+     */
+    public static String listaPedidosJefe(ArrayList<Pedido> pedidos) {
+        List<List<String>> listas = new ArrayList<>();
+        List<String> headers = Arrays.asList("Nº PEDIDO", "ESTADO"); // cabecera
+        List<String> separators = Arrays.asList("---------", "------");
+        listas.add(headers);
+        listas.add(separators);
+        String estado = "En proceso";
+        int terminado;
+        int pendiente;
+        String artesano = "";
+        for (Pedido auxPedido : pedidos) {
+            terminado = 0;
+            pendiente = 0;
+            for(Mueble auxMueble : auxPedido.getMuebles()){
+    
+                if(auxMueble.getArtesano() == null){
+                    estado = "Sin Asignar";
+                    artesano = "";
+                    break;
+                }else if((auxMueble.getArtesano() == null) && (auxMueble.getEstado().equals(Mueble.Estado.TERMINADO) || auxMueble.getEstado().equals(Mueble.Estado.ENTREGADO))){
+                    terminado++;
+                }            }
+            if (estado.equals("Sin Asignar")){}
+            else if(terminado == auxPedido.getMuebles().size()){
+                estado = "Terminado";
+            }else {
+                estado = "Asignado";
+            }
+            listas.add((List<String>) Arrays.asList(""+auxPedido.getNumPedido(), estado));          
+        }
+        return formatearTabla(listas) + "\n";
+    }
+    /**
+     * Método que imprime una tabla con los datos de un mueble
+     */    
+    public static String datosMueble(Mueble mueble){
+        
+        List<List<String>> listas = new ArrayList<>();
+        listas.add((List<String>) Arrays.asList("DESCRIPCIÓN", mueble.getDescripcionMueble()));  
+        listas.add((List<String>) Arrays.asList("Nº DE SERIE", String.valueOf(mueble.getNumSerie())));  
+        listas.add((List<String>) Arrays.asList("ESTADO", String.valueOf(mueble.getEstado())));  
+        listas.add((List<String>) Arrays.asList("COMPRADOR", mueble.getCliente().getNombre() + " " + mueble.getCliente().getApellidos()));
+        if(mueble.getArtesano() == null){
+            listas.add((List<String>) Arrays.asList("ARTESANO: ", "SIN ASIGNAR"));
+        }else{
+            listas.add((List<String>) Arrays.asList("ARTESANO", mueble.getArtesano().getNombre() + " " + 
+                mueble.getArtesano().getNombre()+"(Empleado " + mueble.getArtesano().getIdEmpleado() + ")")); 
+        }
+        listas.add((List<String>) Arrays.asList("Fecha de compra: ", String.valueOf(mueble.getFechaCompra())));
+        if(mueble.getFechaEntrega() == null){
+            listas.add((List<String>) Arrays.asList("Fecha de entrega: ", "No entregado"));
+        }else{
+            listas.add((List<String>) Arrays.asList("Fecha de entrega: ", String.valueOf(mueble.getFechaEntrega())));
         }
         return formatearTabla(listas) + "\n";
     }

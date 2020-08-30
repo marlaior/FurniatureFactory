@@ -1,71 +1,61 @@
-    package muebles;
-    
-    import java.io.Serializable;
-    import java.util.Date;
-    import java.util.ArrayList;;
-    import personas.Persona;
-    import personas.Artesano;
-    import personas.Cliente;
-    import pedidos.Pedido;
-    import fabrica.Controlador;
-    
-    
+package muebles;
+
+import java.io.Serializable;
+import java.util.Date;
+import java.util.ArrayList;;
+import personas.Persona;
+import personas.Artesano;
+import personas.Cliente;
+import pedidos.Pedido;
+import fabrica.Controlador;
+import tools.SoutIF;
+
+
+
+/**
+ * Clase que describe objetos de tipo Mueble
+ * 
+ * @author Marcos Laíño Ordóñez 
+ */
+public class Mueble implements Serializable{
+    private static final long serialVersionUID = 1L;
+    private static final SoutIF<String> PLN = (s) -> System.out.println(s);
+    private static final SoutIF<String> P = (s) -> System.out.println(s);
+    private static final SoutIF<String> PELN = (s) -> System.err.println(s);
+    public enum Estado { PENDIENTE, ASIGNADO, EN_CONSTRUCCION, PAUSADO, TERMINADO, ENTREGADO };
+    protected Estado estado;
+    protected int num_serie;
+    protected String descripcion_mueble;
+    protected Cliente cliente;
+    protected Artesano artesano;
+    protected int tiempoEstimado = 1; //estimacion de nº de horas de construcción
+    protected String anotaciones;
+    protected double precio = 50;
+    protected Date fechaCompra;
+    protected Date fechaEntrega;
     
     /**
-     * Clase que describe objetos de tipo Mueble
-     * 
-     * @author Marcos Laíño Ordóñez 
+     * Constructor de la clase Mueble
      */
-    public class Mueble implements Serializable{
-        private static final long serialVersionUID = 1L;
-        public enum Estado { PENDIENTE, ASIGNADO, EN_CONSTRUCCION, PAUSADO, TERMINADO, ENTREGADO };
-        protected Estado estado;
-        protected int num_serie;
-        protected String descripcion_mueble;
-        protected Cliente cliente;
-        protected Artesano artesano;
-        protected int tiempoEstimado = 1; //estimacion de nº de horas de construcción
-        protected String anotaciones;
-        protected double precio = 50;
-        protected Date fechaCompra;
-        protected Date fechaEntrega;
-        
-        /**
-         * Constructor de la clase Mueble
-         */
-        public Mueble(String descripcion_mueble, Cliente cliente, int tiempoEstimado, double precio){
-            this.estado = Mueble.Estado.PENDIENTE;
-            this.descripcion_mueble = descripcion_mueble;
-            this.cliente = cliente;
-            this.artesano = null;
-            this.tiempoEstimado += tiempoEstimado;
-            this.precio += precio;
-            this.fechaCompra = new Date();
-            this.anotaciones = "Datos Cliente\n"
-                + "**********\n"
-                + this.cliente.getNombre() + this.cliente.getApellidos() + "\n"
-                + "tlfno: " + this.cliente.getTelefono() + "\n\n"
-                + "PEDIDO\n"
-                + "**********\n"
-                + "Tipo Mueble = " + this.descripcion_mueble + "\n"
-                + "Fecha de compra = " + this.fechaCompra + "\n"
-                + "Precio = " + this.precio + "\n\n";
-        }
+    public Mueble(String descripcion_mueble, Cliente cliente, int tiempoEstimado, double precio){
+        this.estado = Mueble.Estado.PENDIENTE;
+        this.descripcion_mueble = descripcion_mueble;
+        this.cliente = cliente;
+        this.artesano = null;
+        this.tiempoEstimado += tiempoEstimado;
+        this.precio += precio;
+        this.fechaCompra = new Date();
+        this.anotaciones = "\n" + this.fechaCompra + "\nCompra del mueble\n";
+        this.fechaEntrega = null;
+    }
     public Mueble(Cliente cliente){
         this.estado = Mueble.Estado.PENDIENTE;
         this.descripcion_mueble = "MUEBLE GENÉRICO";
         this.cliente = cliente;
         this.artesano = null;
         this.fechaCompra = new Date();
-        this.anotaciones = "Datos Cliente\n"
-            + "**********\n"
-            + this.cliente.getNombre() + this.cliente.getApellidos() + "\n"
-            + "tlfno: " + this.cliente.getTelefono() + "\n\n"
-            + "PEDIDO\n"
-            + "**********\n"
-            + "Tipo Mueble = " + this.descripcion_mueble + "\n"
-            + "Fecha de compra = " + this.fechaCompra + "\n"
-            + "Precio = " + this.precio + "\n\n";
+        this.anotaciones = "\n" + this.fechaCompra + "\n\tCompra del mueble\n";
+        this.fechaEntrega = null;
     }
     
     // ***** setters *****
@@ -103,6 +93,35 @@
     }
     public double getPrecio(){
         return this.precio;
+    }
+    public Artesano getArtesano(){
+        return this.artesano;
+    }
+    public Cliente getCliente(){
+        return this.cliente;
+    }
+    public Date getFechaCompra(){
+        return this.fechaCompra;
+    }
+    public Date getFechaEntrega(){
+        return this.fechaEntrega;
+    }
+    public String getAnotaciones(){
+        return this.anotaciones;
+    }
+    
+    
+    // ***** Métodos de carácter gener *****
+    
+    /**
+     * Método que muestra por consola una ficha con la información del mueble
+     */
+    public void fichaMueble(){
+        PLN.out("FICHA DEL MUEBLE");
+        PLN.out("================");
+        PLN.out(tools.Tabla.datosMueble(this)); 
+        PLN.out("\nNOTAS:");
+        PLN.out(this.getAnotaciones());
     }
     
     

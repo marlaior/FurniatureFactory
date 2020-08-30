@@ -4,6 +4,7 @@ import personas.Persona;
 import personas.Cliente;
 import personas.Empleado;
 import pedidos.Pedido;
+import muebles.Mueble;
 import java.util.ArrayList;
 import java.util.Scanner;
 import tools.SoutIF;
@@ -43,37 +44,47 @@ public class Menu{
     private static void selectMenu(){
         switch(usuarioLogueado.getClass().getSimpleName()){
             case "ArtesanoPorHoras":
-                PLN.out("Te has logueado como Artesano por horas");
-                break;
+            PLN.out("Te has logueado como Artesano por horas");
+            break;
+            
             case "ArtesanoEnPlantilla":
-                PLN.out("Te has logueado como Artesano en plantilla");
-                break;
+            PLN.out("Te has logueado como Artesano en plantilla");
+            break;
+            
             case "Jefe":
-                menuJefe();
-                break;
+            menuJefe();
+            break;
+            
             case "Comercial":
-                menuComercial();
-                break;
+            menuComercial();
+            break;
+            
             case "Artesano":
-                PLN.out("Te has logueado como Artesano");
-                break;
+            PLN.out("Te has logueado como Artesano");
+            break;
+            
             case "Empleado":
-                PLN.out("Te has logueado como Empleado");
-                break;
+            PLN.out("Te has logueado como Empleado");
+            break;
+            
             case "ClienteEmpresa":
-                menuCliente();
-                break;
+            menuCliente();
+            break;
+            
             case "ClientePersona":
-                menuCliente();
-                break;
+            menuCliente();
+            break;
+            
             case "Cliente":
-                menuCliente();
-                break;
+            menuCliente();
+            break;
+            
             case "Persona":
-                PLN.out("Te has logueado como Persona");
-                break;
+            PLN.out("Te has logueado como Persona");
+            break;
+            
             default:
-                menuLogin();            
+            menuLogin();            
         }        
     }    
     /**
@@ -132,29 +143,119 @@ public class Menu{
         opciones.add("1 = Cerrar sesión");
         opciones.add("2 = Perfil");
         opciones.add("3 = Gestión de empleados");
-        opciones.add("4 = Pedidos");
+        opciones.add("4 = Gestion de pedidos");
     
         eleccionUsuario = elegirOpcion();
     
         switch (eleccionUsuario) {
+            
             case 0: // el programa se cierra
-               System.out.print('\u000C');
-               PLN.out("Ha elegido finalizar el programa");
-               PLN.out("Hasta pronto");
-               PLN.out("\nPrograma finalizado");
-               System.exit(0);
-               break;
+            System.out.print('\u000C');
+            PLN.out("Ha elegido finalizar el programa");
+            PLN.out("Hasta pronto");
+            PLN.out("\nPrograma finalizado");
+            System.exit(0);
+            break;
+                      
             case 1: // cierra sesión y regresa al login
-               usuarioLogueado = null;
-               System.out.print('\u000C');
-               menuLogin();
-               break;
+            usuarioLogueado = null;
+            System.out.print('\u000C');
+            menuLogin();
+            break;
+            
             case 3: // consulta la lista de empleados
-               Menu.menuGestionEmpleados();
+            Menu.menuGestionEmpleados();
+            break;
+            
+            case 4: // consulta la lista de empleados
+               Menu.menuGestionPedidosJefe();
                break;
         }        
     }
-    
+    /**
+     * Método que crea un menu con el que el jefe puede consultar y gestionar la lista de pedidos de la fábrica
+     */
+    private static void menuGestionPedidosJefe(){
+        opciones.clear();
+        System.out.print('\u000C');
+        PLN.out("GESTIÓN DE PEDIDOS");
+        PLN.out("==================");
+        opciones.add("\n0 = Regresar al menú principal");
+        opciones.add("1 = Consulta lista completa de pedidos");        
+        eleccionUsuario = elegirOpcion();        
+        switch (eleccionUsuario) {                        
+            case 0: // regresamos al menú principal
+            System.out.print('\u000C');
+            menuJefe();
+            break;            
+            
+            case 1: // Se muestra la lista completa de pedidos
+            System.out.print('\u000C');
+            PLN.out("LISTA COMPLETA DE PEDIDOS");
+            PLN.out("=========================");
+            if(Controlador.verListaCompletaPedidos()){
+                int numPedido = seleccionarNumPedido();
+                if(numPedido == 0){
+                    menuJefe();
+                }else{
+                    menuListaCompletaPedidos(numPedido);
+                }
+            }else{
+                PLN.out("\nLa fábrica todavía no ha recibido ningún pedido");
+                tools.Herramientas.enterParaContinuar();
+                menuJefe();
+            }
+            break;
+        }
+    }
+    /**
+     * Menu de opciones sobre la ista completa de pedidos
+     */
+    private static void menuListaCompletaPedidos(int numPedido){
+        ArrayList<Pedido> pedidos = Controlador.loadPedidos();
+        int numSerie = 0;
+        Pedido pedido = null;
+        Mueble mueble = null;
+        for(Pedido auxPedido : pedidos){
+            if(auxPedido.getNumPedido() == numPedido){
+                pedido = auxPedido;
+            }
+        }
+        System.out.print('\u000C');
+        PLN.out("PEDIDO " + numPedido);
+        PLN.out("===========");
+        PLN.out("Cliente: " + pedido.getCliente().getNombre() + pedido.getCliente().getApellidos());
+        PLN.out("Fecha pedido: " + pedido.getFechaCompra());
+        Controlador.listaMueblesPedido(pedido);
+        numSerie = Controlador.selectNumSerie(pedido);
+        if(numSerie == 0){
+            menuJefe();
+        }else{
+            for(Mueble auxMueble : pedido.getMuebles()){
+                if(auxMueble.getNumSerie() == numSerie){
+                    mueble = auxMueble;
+                    break;
+                }
+            }
+            if(mueble == null){
+                System.out.print('\u000C');
+                PLN.out("No es posible cargar los datos del pedido" + numSerie);
+                tools.Herramientas.enterParaContinuar();
+                menuJefe();
+            }else{
+                menuFichaMueble(mueble);
+            }
+        }        
+    }
+    /**
+     * Método que despliega un menú de opciones para la ficha de un mueble
+     */
+    public static void menuFichaMueble(Mueble mueble){
+        System.out.print('\u000C');
+        mueble.fichaMueble();
+        tools.Herramientas.enterParaContinuar();
+        menuGestionPedidosJefe();     
+    }    
     /**
      * Menú con el que el Jefe gestiona la lista de empleados
      */
@@ -163,7 +264,7 @@ public class Menu{
         PLN.out("LISTA DE EMPLEADOS");
         PLN.out("==================\n");
         Controlador.verListaEmpleados();
-            opciones.clear();
+        opciones.clear();
     
         PLN.out("\n\nOpciones");
         PLN.out("========");
@@ -175,19 +276,21 @@ public class Menu{
     
         switch (eleccionUsuario) {
             case 0: // regresamos al menú principal del jefe
-               System.out.print('\u000C');
-               menuJefe();
-               break;
+            System.out.print('\u000C');
+            menuJefe();
+            break;
+
             case 1: // se crea un nuevo empleado
-               PLN.out("\n\nNuevo empleado");
-               PLN.out("==============");
-               Controlador.crearEmpleado();
-               break;
+            PLN.out("\n\nNuevo empleado");
+            PLN.out("==============");
+            Controlador.crearEmpleado();
+            break;
+
             case 2:
-               PLN.out("\n\nDespedir empleado");
-               PLN.out("==============");
-               Controlador.despedirEmpleado();
-               break;               
+            PLN.out("\n\nDespedir empleado");
+            PLN.out("==============");
+            Controlador.despedirEmpleado();
+            break;               
         }        
     }
     
@@ -214,20 +317,22 @@ public class Menu{
     
         switch (eleccionUsuario) {
             case 0: // el programa se cierra
-               System.out.print('\u000C');
-               PLN.out("Ha elegido finalizar el programa");
-               PLN.out("Hasta pronto");
-               PLN.out("\nPrograma finalizado");
-               System.exit(0);
-               break;
+            System.out.print('\u000C');
+            PLN.out("Ha elegido finalizar el programa");
+            PLN.out("Hasta pronto");
+            PLN.out("\nPrograma finalizado");
+            System.exit(0);
+            break;
+
             case 1: // cierra sesión y regresa al login
-               usuarioLogueado = null;
-               System.out.print('\u000C');
-               menuLogin();
-               break;
+            usuarioLogueado = null;
+            System.out.print('\u000C');
+            menuLogin();
+            break;
+
             case 3: // consulta la lista de clientes
-               Menu.menuGestionClientes();
-               break;
+            Menu.menuGestionClientes();
+            break;
         }        
     }
     
@@ -251,14 +356,15 @@ public class Menu{
     
         switch (eleccionUsuario) {
             case 0: // regresamos al menú principal del jefe
-               System.out.print('\u000C');
-               menuJefe();
-               break;
+            System.out.print('\u000C');
+            menuJefe();
+            break;
+
             case 1: // se crea un nuevo cliente
-               PLN.out("\n\nFormulario nuevo cliente");
-               PLN.out("========================");
-               Controlador.crearCliente(((Empleado)usuarioLogueado).getIdEmpleado());
-               break;   
+            PLN.out("\n\nFormulario nuevo cliente");
+            PLN.out("========================");
+            Controlador.crearCliente(((Empleado)usuarioLogueado).getIdEmpleado());
+            break;   
 
         }        
     }
@@ -286,45 +392,44 @@ public class Menu{
     
         switch (eleccionUsuario) {
             case 0: // el programa se cierra
-               PLN.out("Ha elegido finalizar el programa");
-               PLN.out("Hasta pronto");
-               PLN.out("\nPrograma finalizado");
-               System.exit(0);
-               break;
+            PLN.out("Ha elegido finalizar el programa");
+            PLN.out("Hasta pronto");
+            PLN.out("\nPrograma finalizado");
+            System.exit(0);
+            break;
+
             case 1: // cierra sesión y regresa al login
-               usuarioLogueado = null;
-               menuLogin();
-               break;
+            usuarioLogueado = null;
+            menuLogin();
+            break;
+
             case 3: // consulta el catálogo de muebles
-                PLN.out("CATÁLOGO DE MUEBLES");
-                PLN.out("===================");
-                PLN.out(Tabla.catalogoMuebles());
-                Controlador.comprarMuebles(((Cliente)usuarioLogueado).getIdCliente());
-                menuCliente();
-                break;
+            PLN.out("CATÁLOGO DE MUEBLES");
+            PLN.out("===================");
+            PLN.out(Tabla.catalogoMuebles());
+            Controlador.comprarMuebles(((Cliente)usuarioLogueado).getIdCliente());
+            menuCliente();
+            break;
+
             case 4: // consulta el estado de los pedidos
-                PLN.out("MIS PEDIDOS");
-                PLN.out("===========");
-                boolean tienePedidos = Controlador.consultaPedidosCliente(((Cliente)usuarioLogueado).getIdCliente());
-                if (!tienePedidos){
-                    PLN.out("Todavía no tiene pedidos");
-                    tools.Herramientas.enterParaContinuar();
-                    menuCliente();
-                }
-                else{
-                    menuPedidosCliente();                    
-                }
-                break;
+            PLN.out("MIS PEDIDOS");
+            PLN.out("===========");
+            boolean tienePedidos = Controlador.consultaPedidosCliente(((Cliente)usuarioLogueado).getIdCliente());
+            if (!tienePedidos){
+                PLN.out("Todavía no tiene pedidos");
+                tools.Herramientas.enterParaContinuar();
+                menuCliente();
+            }else{
+                menuPedidosCliente();                    
+            }
+            break;
         }          
     }   
     /**
      * Método que muestra las opciones del cliente sobre su lista de pedidos
      */
     private static void menuPedidosCliente(){
-
-        int numPedido = seleccionarNumPedido();
-
-    
+        int numPedido = seleccionarNumPedidoCliente();
         if(numPedido != 0){
             Controlador.consultaListaMueblesPedido(numPedido, ((Cliente)usuarioLogueado).getIdCliente());     
             tools.Herramientas.enterParaContinuar();
@@ -332,7 +437,6 @@ public class Menu{
         menuCliente();
     }
     
-
     // ******************************
     // *   MÉTODOS DE USO GENERAL   *
     // ******************************    
@@ -374,6 +478,43 @@ public class Menu{
      */
     public static int seleccionarNumPedido() {        
         int num = -1;
+        ArrayList<Pedido> pedidos = Controlador.loadPedidos();        
+        boolean allRight = false;
+        P.out("Indique número de pedido (0 = Regresar): ");
+        do {           
+            try {
+                num = scanner.nextInt();
+                scanner.nextLine(); // limpia pulsaciones residuales de cara a posibles sucesiones.
+                if (num < 0) {
+                    PLN.out("No existe ningún pedido con ese id.");
+                } else if (num == 0){                   
+                    allRight = true;
+                }else{
+                    for (Pedido auxPedido : pedidos){
+                        if (num == auxPedido.getNumPedido()){
+                            allRight = true;
+                        }
+                    }
+                    if(!allRight){
+                        PLN.out("No existe ningún pedido con ese id.");
+                    }
+                }
+            } catch (Exception e) {
+                PLN.out("Valor incorrecto.");
+                scanner.nextLine();
+            }
+            if(!allRight) {
+                P.out("Indique otro Id: ");
+                num = -1;
+            }
+        } while (!allRight);
+        return num;
+    } 
+    /**
+     * Método para que el cliente seleccione un número de pedido (de uno de sus pedidos)
+     */
+    public static int seleccionarNumPedidoCliente() {        
+        int num = -1;
         ArrayList<Pedido> pedidos = Controlador.loadPedidos();
         ArrayList<Pedido> pedidosCliente = new ArrayList<Pedido>();
         
@@ -407,5 +548,6 @@ public class Menu{
             }
         } while (!allRight);
         return num;
-    }   
+    } 
+   
 }
