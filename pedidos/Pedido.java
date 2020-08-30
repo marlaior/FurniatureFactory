@@ -41,6 +41,9 @@ public class Pedido implements Serializable{
     public Cliente getCliente(){
         return this.cliente;
     }
+    public Date getFechaCompra(){
+        return this.fechaCompra;
+    }
     
     // *********** setters ***********
     

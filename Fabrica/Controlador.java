@@ -307,6 +307,25 @@ import pedidos.*;
         tools.Herramientas.enterParaContinuar();
         Menu.menuGestionEmpleados();
     }
+    /**
+     * Método que imprime la lista completa de pedidos
+     */
+    public static boolean verListaCompletaPedidos(){
+        ArrayList<Pedido> pedidos = loadPedidos();
+        boolean tienePedidos = false;
+        if(pedidos.size() != 0){
+            PLN.out(tools.Tabla.listaPedidosJefe(pedidos));
+            tienePedidos = true;
+        }
+        return tienePedidos;            
+    }
+    /**
+     * Método que imprime la lista de muebles de un pedido pasado por parámetro
+     */
+    public static void listaMueblesPedido(Pedido pedido){
+        ArrayList<Mueble> mueble = pedido.getMuebles();
+        PLN.out(tools.Tabla.listaMueblesPedido(mueble));
+    }        
         
             // ********** Menu Comercial **********
         
@@ -469,7 +488,7 @@ import pedidos.*;
         Mueble nuevoMueble = null;
         int cantidad = 0;
         int idMueble = -1; // id del modelo de mueble en el catálogo
-        int numSerie = 0;
+        int numSerie = 1;
         
         for (Cliente clienteAux : clientes){
             if (clienteAux.getIdCliente() == id_cliente){
@@ -808,5 +827,36 @@ import pedidos.*;
             }
         } while (!allRight);
         return cantidad;
+    }
+    /**
+     * Método que permite que el usuario seleccione el numero de serie de un mueble de un pedido pasado por parámetro
+     */
+    public static int selectNumSerie(Pedido pedido){
+        int numSerie = -1;
+        boolean allRight = false;
+        P.out("Numero de serie (0 = Regresar al menú principal): ");
+        do {           
+            try {
+                numSerie = scanner.nextInt();
+                scanner.nextLine(); // limpia pulsaciones residuales de cara a posibles sucesiones.
+                if (numSerie == 0) {
+                    allRight = true;
+                }else {         
+                    for(Mueble auxMueble : pedido.getMuebles()){
+                        if(numSerie == auxMueble.getNumSerie()){
+                            allRight = true;
+                        }
+                    }                    
+                }
+            } catch (Exception e) {
+                PLN.out("Valor incorrecto.");
+                numSerie = -1;
+                scanner.nextLine();
+            }
+            if(!allRight) {
+                PLN.out("No hay muebles con ese id. Inténtelo de nuevo");
+            }
+        } while (!allRight);
+        return numSerie;
     }
 }
