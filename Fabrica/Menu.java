@@ -142,9 +142,8 @@ public class Menu{
         PLN.out("==============");
         opciones.add("\n0 = Salir de la aplicación");
         opciones.add("1 = Cerrar sesión");
-        opciones.add("2 = Perfil");
-        opciones.add("3 = Gestión de empleados");
-        opciones.add("4 = Gestion de pedidos");
+        opciones.add("2 = Gestión de empleados");
+        opciones.add("3 = Gestion de pedidos");
     
         eleccionUsuario = elegirOpcion();
     
@@ -164,11 +163,11 @@ public class Menu{
             menuLogin();
             break;
             
-            case 3: // gestiona la lista de empleados
+            case 2: // gestiona la lista de empleados
             Menu.menuGestionEmpleados();
             break;
             
-            case 4: // gestiona la lista de pedidos
+            case 3: // gestiona la lista de pedidos
             Menu.menuGestionPedidosJefe();
             break;
         }        
@@ -335,9 +334,7 @@ public class Menu{
         PLN.out("==============");
         opciones.add("\n0 = Salir de la aplicación");
         opciones.add("1 = Cerrar sesión");
-        opciones.add("2 = Gestión de perfil");
-        opciones.add("3 = Gestión de clientes");
-        opciones.add("4 = Gestión de pedidos");
+        opciones.add("2 = Gestión de clientes");
     
         eleccionUsuario = elegirOpcion();
     
@@ -356,7 +353,7 @@ public class Menu{
             menuLogin();
             break;
 
-            case 3: // consulta la lista de clientes
+            case 2: // consulta la lista de clientes
             Menu.menuGestionClientes();
             break;
         }        
@@ -411,10 +408,9 @@ public class Menu{
         PLN.out("==============");
         opciones.add("\n0 = Salir de la aplicación");
         opciones.add("1 = Cerrar sesión");
-        opciones.add("2 = Perfil");
-        opciones.add("3 = Gestión de pedidos");
+        opciones.add("2 = Gestión de pedidos");
         if(usuarioLogueado instanceof ArtesanoPorHoras){
-            opciones.add("4 = Información laboral");
+            opciones.add("3 = Información laboral");
         }
     
         eleccionUsuario = elegirOpcion();
@@ -435,11 +431,11 @@ public class Menu{
             menuLogin();
             break;
             
-            case 3: // gestiona la lista de pedidos asignados            
+            case 2: // gestiona la lista de pedidos asignados            
             menuGestionMueblesAsignados();
             break;
             
-            case 4: // consulta información de caracter laboral del artesano contratado por horas
+            case 3: // consulta información de caracter laboral del artesano contratado por horas
             // menuInformacionLaboral();
             break;
         }       
@@ -590,9 +586,8 @@ public class Menu{
         PLN.out("==============");
         opciones.add("\n0 = Salir de la aplicación");
         opciones.add("1 = Cerrar sesión");
-        opciones.add("2 = Perfil");
-        opciones.add("3 = Tienda");
-        opciones.add("4 = Mis pedidos");
+        opciones.add("2 = Tienda");
+        opciones.add("3 = Mis pedidos");
     
         eleccionUsuario = elegirOpcion();
         System.out.print('\u000C');
@@ -610,7 +605,7 @@ public class Menu{
             menuLogin();
             break;
 
-            case 3: // consulta el catálogo de muebles
+            case 2: // consulta el catálogo de muebles
             PLN.out("CATÁLOGO DE MUEBLES");
             PLN.out("===================");
             PLN.out(Tabla.catalogoMuebles());
@@ -618,7 +613,7 @@ public class Menu{
             menuCliente();
             break;
 
-            case 4: // consulta el estado de los pedidos
+            case 3: // consulta el estado de los pedidos
             PLN.out("MIS PEDIDOS");
             PLN.out("===========");
             boolean tienePedidos = Controlador.consultaPedidosCliente(((Cliente)usuarioLogueado).getIdCliente());
