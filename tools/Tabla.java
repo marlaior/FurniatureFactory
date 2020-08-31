@@ -10,6 +10,9 @@ import java.text.DecimalFormat;
 import personas.Persona;
 import personas.Cliente;
 import personas.Empleado;
+import personas.Artesano;
+import personas.ArtesanoPorHoras;
+import personas.ArtesanoEnPlantilla;
 import pedidos.Pedido;
 import muebles.Mueble;
 
@@ -82,7 +85,7 @@ public class Tabla{
                empleadoAux.getApellidos(), 
                empleadoAux.getPuesto(), 
                new SimpleDateFormat("dd/MM/yyyy").format(empleadoAux.getFechaAlta()), 
-               (empleadoAux.getFechaBaja() == null) ? "null" : new SimpleDateFormat("dd/MM/yyyy").format(empleadoAux.getFechaBaja())
+               (empleadoAux.getFechaBaja() == null) ? "---" : new SimpleDateFormat("dd/MM/yyyy").format(empleadoAux.getFechaBaja())
             ));            
         }
         return formatearTabla(listas) + "\n";
@@ -104,6 +107,25 @@ public class Tabla{
                (clienteAux.getApellidos() != null) ? clienteAux.getApellidos() : "", 
                clienteAux.getNif(),
                (clienteAux.getTelefono() != null) ? clienteAux.getTelefono() : ""
+            ));            
+        }
+        return formatearTabla(listas) + "\n";
+    }
+    /**
+     * Método que muestra la lista de Artesanos que trabajan para la fábrica
+     */
+    public static String listaArtesanos(ArrayList<Artesano> artesanos){
+        List<List<String>> listas = new ArrayList<>();
+        List<String> headers = Arrays.asList("Id empleado", "nombre", "apellidos", "contrato"); // cabecera
+        List<String> separators = Arrays.asList("-----------", "------", "---------", "--------");
+        listas.add(headers);
+        listas.add(separators);
+        for (Artesano auxArtesano : artesanos) {
+            listas.add((List<String>) Arrays.asList(
+               String.valueOf(auxArtesano.getIdEmpleado()), 
+               auxArtesano.getNombre(), 
+               auxArtesano.getApellidos(), 
+               auxArtesano.getPuesto()
             ));            
         }
         return formatearTabla(listas) + "\n";
@@ -142,7 +164,7 @@ public class Tabla{
         List<String> separators = Arrays.asList("---------", "------");
         listas.add(headers);
         listas.add(separators);
-        String estado = "En proceso";
+        String estado = "EN PROCESO";
         int terminado;
         int pendiente;
         for (Pedido auxPedido : pedidos) {
@@ -151,7 +173,7 @@ public class Tabla{
             for(Mueble auxMueble : auxPedido.getMuebles()){
     
                 if(auxMueble.getEstado().equals(Mueble.Estado.ENTREGADO)){
-                    estado = "Entregado";
+                    estado = "ENTREGADO";
                     break;
                 }else if(auxMueble.getEstado().equals(Mueble.Estado.TERMINADO)){
                     terminado++;
@@ -159,13 +181,13 @@ public class Tabla{
                     pendiente++;
                 }
             }
-            if (estado.equals("Entregado")){}
+            if (estado.equals("ENTREGADO")){}
             else if(terminado == auxPedido.getMuebles().size()){
-                estado = "Terminado";
+                estado = "TERMINADO";
             }else if(pendiente == auxPedido.getMuebles().size()){
-                estado = "Pendiente";
+                estado = "PENDIENTE";
             }else {
-                estado = "En proceso";
+                estado = "EN PROCESO";
             }
             listas.add((List<String>) Arrays.asList(""+auxPedido.getNumPedido(), estado));          
         }
@@ -181,14 +203,18 @@ public class Tabla{
         listas.add(headers);
         listas.add(separators);
         DecimalFormat decimalFormat = new DecimalFormat("#.00"); // esta instrucción hará que se muestren los datos tipo double con dos decimales
+        double importeTotal = 0;
 
         for (Mueble auxMueble : muebles) {
             listas.add((List<String>) Arrays.asList(
                 String.valueOf(auxMueble.getNumSerie()),
                 auxMueble.getDescripcionMueble(), 
                 String.valueOf(auxMueble.getEstado()), 
-                decimalFormat.format(auxMueble.getPrecio())));          
+                decimalFormat.format(auxMueble.getPrecio())+"€"));  
+            importeTotal += auxMueble.getPrecio();
         }
+        listas.add(separators);
+        listas.add((List<String>) Arrays.asList("", "", "", decimalFormat.format(importeTotal)));
         return formatearTabla(listas) + "\n";
     }
     /**
@@ -196,33 +222,43 @@ public class Tabla{
      */
     public static String listaPedidosJefe(ArrayList<Pedido> pedidos) {
         List<List<String>> listas = new ArrayList<>();
-        List<String> headers = Arrays.asList("Nº PEDIDO", "ESTADO"); // cabecera
-        List<String> separators = Arrays.asList("---------", "------");
+        List<String> headers = Arrays.asList("Nº PEDIDO", "CLIENTE", "ARTESANO", "ESTADO", "IMPORTE"); // cabecera
+        List<String> separators = Arrays.asList("---------", "-------", "--------", "------", "-------");
         listas.add(headers);
         listas.add(separators);
-        String estado = "En proceso";
+        String estado = "EN PROCESO";
         int terminado;
         int pendiente;
+        double importeTotal = 0;
         String artesano = "";
+        DecimalFormat decimalFormat = new DecimalFormat("#.00"); // esta instrucción hará que se muestren los datos tipo double con dos decimales
         for (Pedido auxPedido : pedidos) {
             terminado = 0;
             pendiente = 0;
-            for(Mueble auxMueble : auxPedido.getMuebles()){
-    
+            for(Mueble auxMueble : auxPedido.getMuebles()){    
                 if(auxMueble.getArtesano() == null){
-                    estado = "Sin Asignar";
-                    artesano = "";
-                    break;
-                }else if((auxMueble.getArtesano() == null) && (auxMueble.getEstado().equals(Mueble.Estado.TERMINADO) || auxMueble.getEstado().equals(Mueble.Estado.ENTREGADO))){
-                    terminado++;
-                }            }
-            if (estado.equals("Sin Asignar")){}
-            else if(terminado == auxPedido.getMuebles().size()){
-                estado = "Terminado";
-            }else {
-                estado = "Asignado";
+                    estado = "SIN ASIGNAR";
+                    artesano = "";    
+                }else{
+                    artesano = auxMueble.getArtesano().getNombre() + " " + auxMueble.getArtesano().getApellidos();
+                    if(auxMueble.getEstado().equals(Mueble.Estado.TERMINADO) || auxMueble.getEstado().equals(Mueble.Estado.ENTREGADO)){
+                        terminado++;
+                    }
+                }    
+                importeTotal += auxMueble.getPrecio();
             }
-            listas.add((List<String>) Arrays.asList(""+auxPedido.getNumPedido(), estado));          
+            if (estado.equals("SIN ASIGNAR")){}
+            else if(terminado == auxPedido.getMuebles().size()){
+                estado = "TERMINADO";
+            }else {
+                estado = "ASIGNADO";
+            }
+            listas.add((List<String>) Arrays.asList(
+                String.valueOf(auxPedido.getNumPedido()),
+                auxPedido.getCliente().getNombre() + " " + auxPedido.getCliente().getApellidos(),
+                artesano,
+                estado,
+                decimalFormat.format(importeTotal)+"€"));   
         }
         return formatearTabla(listas) + "\n";
     }
@@ -240,13 +276,13 @@ public class Tabla{
             listas.add((List<String>) Arrays.asList("ARTESANO: ", "SIN ASIGNAR"));
         }else{
             listas.add((List<String>) Arrays.asList("ARTESANO", mueble.getArtesano().getNombre() + " " + 
-                mueble.getArtesano().getNombre()+"(Empleado " + mueble.getArtesano().getIdEmpleado() + ")")); 
+                mueble.getArtesano().getNombre()+"(Empleado nº" + mueble.getArtesano().getIdEmpleado() + ")")); 
         }
-        listas.add((List<String>) Arrays.asList("Fecha de compra: ", String.valueOf(mueble.getFechaCompra())));
+        listas.add((List<String>) Arrays.asList("FECHA DE COMPRA: ", String.valueOf(mueble.getFechaCompra())));
         if(mueble.getFechaEntrega() == null){
-            listas.add((List<String>) Arrays.asList("Fecha de entrega: ", "No entregado"));
+            listas.add((List<String>) Arrays.asList("FECHA DE ENTREGA: ", "NO ENTREGADO"));
         }else{
-            listas.add((List<String>) Arrays.asList("Fecha de entrega: ", String.valueOf(mueble.getFechaEntrega())));
+            listas.add((List<String>) Arrays.asList("FECHA DE ENTREGA: ", String.valueOf(mueble.getFechaEntrega())));
         }
         return formatearTabla(listas) + "\n";
     }

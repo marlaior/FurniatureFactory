@@ -10,8 +10,6 @@ import pedidos.Pedido;
 import fabrica.Controlador;
 import tools.SoutIF;
 
-
-
 /**
  * Clase que describe objetos de tipo Mueble
  * 
@@ -78,7 +76,7 @@ public class Mueble implements Serializable{
         this.tiempoEstimado = tiempoEstimado;
     }
     public void setAnotaciones(String anotaciones){
-        this.anotaciones.concat(anotaciones);
+        this.anotaciones += anotaciones;
     }
     
     // ***** getters *****
