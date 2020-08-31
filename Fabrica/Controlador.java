@@ -368,8 +368,8 @@ import pedidos.*;
                             auxMueble.setArtesano((Artesano)auxPersona);
                             auxMueble.setEstado(Mueble.Estado.ASIGNADO);
                             auxMueble.setAnotaciones(
-                            new Date() +
-                            "\n\tAsignada la construcción al artesano " + ((Artesano)auxPersona).getNombre() + " " + ((Artesano)auxPersona).getApellidos());
+                            "\n" + new Date() +
+                            "\n\tAsignada la construcción al artesano " + ((Artesano)auxPersona).getNombre() + " " + ((Artesano)auxPersona).getApellidos() + "\n");
                             PLN.out("Se ha asignado el mueble con nº de serie " + auxMueble.getNumSerie() + 
                                 " al artesano " + ((Artesano)auxPersona).getNombre() + " " + ((Artesano)auxPersona).getApellidos());
                         }
@@ -400,32 +400,7 @@ import pedidos.*;
         ArrayList<Mueble> mueble = pedido.getMuebles();
         PLN.out(tools.Tabla.listaMueblesPedido(mueble));
     }  
-    /**
-     * Método que inicia la construccion del mueble cuyo id se pasa por parametro
-     */
-    public static void iniciarConstruccionMueble(int numSerie){
-        ArrayList<Pedido> pedidos = loadPedidos();
-        boolean muebleIniciado = false;
-        for(Pedido auxPedido : pedidos){
-            for(Mueble auxMueble : auxPedido.getMuebles()){
-                if(auxMueble.getNumSerie() == numSerie){
-                    auxMueble.setEstado(Mueble.Estado.EN_CONSTRUCCION);
-                    auxMueble.setAnotaciones(
-                        new Date() +
-                        "\n\t" + auxMueble.getArtesano().getNombre() + " " + auxMueble.getArtesano().getApellidos() + " inició la construcción."
-                    );
-                    muebleIniciado = true;
-                    PLN.out("Se ha iniciado la construcción del mueble con nº de serie " + auxMueble.getNumSerie());
-                    tools.Herramientas.enterParaContinuar();
-                    savePedidos(pedidos);
-                    break;
-                }
-            }
-            if(muebleIniciado){ // si ya se ha encontrado e iniciado el mueble que buscamos, salimos del bucle-
-                break;
-            }
-        }
-    }
+
         
             // ********** Menu Comercial **********
         
@@ -598,6 +573,112 @@ import pedidos.*;
             PLN.out(tools.Tabla.listaMueblesAsignados(pedidosAsignados));
         }      
     }
+    /**
+     * Método que inicia la construccion del mueble cuyo id se pasa por parametro
+     */
+    public static void iniciarConstruccionMueble(int numSerie){
+        ArrayList<Pedido> pedidos = loadPedidos();
+        boolean muebleIniciado = false;
+        for(Pedido auxPedido : pedidos){
+            for(Mueble auxMueble : auxPedido.getMuebles()){
+                if(auxMueble.getNumSerie() == numSerie){
+                    auxMueble.setEstado(Mueble.Estado.EN_CONSTRUCCION);
+                    auxMueble.setAnotaciones(
+                        "\n"+new Date() +
+                        "\n\t" + auxMueble.getArtesano().getNombre() + " " + auxMueble.getArtesano().getApellidos() + " inició la construcción.\n"
+                    );
+                    muebleIniciado = true;
+                    PLN.out("Se ha iniciado la construcción del mueble con nº de serie " + auxMueble.getNumSerie());
+                    tools.Herramientas.enterParaContinuar();
+                    savePedidos(pedidos);
+                    break;
+                }
+            }
+            if(muebleIniciado){ // si ya se ha encontrado e iniciado el mueble que buscamos, salimos del bucle.
+                break;
+            }
+        }
+    }
+    /**
+     * Método que pausa la construccion de un mueble cuyo id se pasa por parámetro
+     */
+    public static void pausarConstruccionMueble(int numSerie){
+        ArrayList<Pedido> pedidos = loadPedidos();
+        boolean mueblePausado = false;
+        String comentario = escribeComentario();
+        for(Pedido auxPedido : pedidos){
+            for(Mueble auxMueble : auxPedido.getMuebles()){
+                if(auxMueble.getNumSerie() == numSerie){
+                    auxMueble.setEstado(Mueble.Estado.PAUSADO);
+                    auxMueble.setAnotaciones(
+                        "\n" + new Date() +
+                        "\n\t" + auxMueble.getArtesano().getNombre() + " " + auxMueble.getArtesano().getApellidos() + " pausó la construcción del mueble." +
+                        "\n\tComentario del artesano: " + comentario + "\n"
+                    );
+                    mueblePausado = true;
+                    PLN.out("Se ha pausado la construcción del mueble con nº de serie " + auxMueble.getNumSerie());
+                    tools.Herramientas.enterParaContinuar();
+                    savePedidos(pedidos);
+                    break;
+                }
+            }
+            if(mueblePausado){ // si ya se ha encontrado e iniciado el mueble que buscamos, salimos del bucle.
+                break;
+            }
+        }
+    } 
+    /**
+     * Método que reanuda la construcción de un mueble cuyo id se pasa por parámetro
+     */
+    public static void reanudarConstruccionMueble(int numSerie){
+        ArrayList<Pedido> pedidos = loadPedidos();
+        boolean muebleReanudado = false;
+        for(Pedido auxPedido : pedidos){
+            for(Mueble auxMueble : auxPedido.getMuebles()){
+                if(auxMueble.getNumSerie() == numSerie){
+                    auxMueble.setEstado(Mueble.Estado.EN_CONSTRUCCION);
+                    auxMueble.setAnotaciones(
+                        "\n" + new Date() +
+                        "\n\t" + auxMueble.getArtesano().getNombre() + " " + auxMueble.getArtesano().getApellidos() + " ha reanudado la construcción del mueble." + "\n"
+                    );
+                    muebleReanudado = true;
+                    PLN.out("Se ha reanudado la construcción del mueble con nº de serie " + auxMueble.getNumSerie());
+                    tools.Herramientas.enterParaContinuar();
+                    savePedidos(pedidos);
+                    break;
+                }
+            }
+            if(muebleReanudado){ // si ya se ha encontrado e iniciado el mueble que buscamos, salimos del bucle.
+                break;
+            }
+        }
+    } 
+    /**
+     * Método que finaliza la construcción de un mueble cuyo id se pasa por parámetro
+     */
+    public static void finalizarConstruccionMueble(int numSerie){
+        ArrayList<Pedido> pedidos = loadPedidos();
+        boolean muebleFinalizado = false;
+        for(Pedido auxPedido : pedidos){
+            for(Mueble auxMueble : auxPedido.getMuebles()){
+                if(auxMueble.getNumSerie() == numSerie){
+                    auxMueble.setEstado(Mueble.Estado.TERMINADO);
+                    auxMueble.setAnotaciones(
+                        "\n" + new Date() +
+                        "\n\t" + auxMueble.getArtesano().getNombre() + " " + auxMueble.getArtesano().getApellidos() + " finalizó la construcción del mueble." + "\n"
+                    );
+                    muebleFinalizado = true;
+                    PLN.out("Se ha finalizado la construcción del mueble con nº de serie " + auxMueble.getNumSerie());
+                    tools.Herramientas.enterParaContinuar();
+                    savePedidos(pedidos);
+                    break;
+                }
+            }
+            if(muebleFinalizado){ // si ya se ha encontrado e iniciado el mueble que buscamos, salimos del bucle.
+                break;
+            }
+        }
+    } 
         
                 // ********** Menu cliente **********
         
@@ -905,7 +986,7 @@ import pedidos.*;
         } while (!allRight);
         return id;
     }    
-        /**
+    /**
      * Método para que el usuario indique un id de empleado
      */
     public static int seleccionarArtesano() {        
@@ -1024,5 +1105,25 @@ import pedidos.*;
             }
         } while (!allRight);
         return numSerie;
+    }
+    /**
+     * Método que permite que el usuario escriba un comentario
+     */
+    private static String  escribeComentario(){
+        String comentario = "";
+        do{
+            try{
+                P.out("Motivo = ");
+                comentario = scanner.nextLine();
+                if(comentario.trim().equals("")){
+                    comentario = "";
+                    PLN.out("El comentario no puede estar vacío");
+                }
+            }catch(Exception e){
+                comentario = "";
+                scanner.nextLine();
+            }
+        }while(comentario.equals(""));
+        return comentario;      
     }
 }
