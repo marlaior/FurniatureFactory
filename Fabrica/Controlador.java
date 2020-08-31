@@ -542,6 +542,7 @@ import pedidos.*;
         }while(!correcto);
         return isEmpresa;
     }
+
     /**
      * Método que permite que el usuario establezca el valor de un atributo estableciendo unos límites al valor.
      */

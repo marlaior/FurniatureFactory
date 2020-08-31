@@ -353,6 +353,10 @@ public class Menu{
             case 3: // consulta la lista de clientes
             Menu.menuGestionClientes();
             break;
+            
+            case 4: // gestion de pedidos de clientes
+            // Menu.menuGestionarPedidosComercial
+            break;
         }        
     }
     
@@ -388,7 +392,34 @@ public class Menu{
 
         }        
     }
+    public static void menuGestionPedidosComercial(){
+        System.out.print('\u000C');
+        PLN.out("LISTA DE PEDIDOS");
+        PLN.out("================\n");
+        PLN.out("ID logueado = " + ((Empleado)usuarioLogueado).getIdEmpleado());
+        //Controlador.verListaClientesComercial(((Empleado)usuarioLogueado).getIdEmpleado());
+        opciones.clear();
     
+        PLN.out("\n\nOpciones");
+        PLN.out("========");
+        opciones.add("\n0 = Volver al menú principal");
+    
+        eleccionUsuario = elegirOpcion();
+    
+        switch (eleccionUsuario) {
+            case 0: // regresamos al menú principal del jefe
+            System.out.print('\u000C');
+            menuJefe();
+            break;
+
+            case 1: // se crea un nuevo cliente
+            PLN.out("\n\nFormulario nuevo cliente");
+            PLN.out("========================");
+            Controlador.crearCliente(((Empleado)usuarioLogueado).getIdEmpleado());
+            break;   
+
+        }        
+    }
         
     // ******************************
     // *          ARTESANO          *
@@ -435,7 +466,7 @@ public class Menu{
             break;
             
             case 4: // consulta la lista de empleados
-            // menuInformacionLaboral();
+            menuInformacionLaboral();
             break;
         }       
     }
