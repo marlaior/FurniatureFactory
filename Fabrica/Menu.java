@@ -128,7 +128,7 @@ public class Menu{
     /**
      * Menú principal de opciones para el usuario Jefe
      */
-    public static void menuJefe(){
+    private static void menuJefe(){
         opciones.clear();
         System.out.print('\u000C');
 
@@ -270,7 +270,7 @@ public class Menu{
     /**
      * Método que despliega un menú de opciones para la ficha de un mueble
      */
-    public static void menuFichaMueble(Mueble mueble){
+    private static void menuFichaMueble(Mueble mueble){
         System.out.print('\u000C');
         mueble.fichaMueble();
         tools.Herramientas.enterParaContinuar();
@@ -321,7 +321,7 @@ public class Menu{
     /**
      * Menú principal de opciones para el usuario Jefe
      */
-    public static void menuComercial(){
+    private static void menuComercial(){
         opciones.clear();
         System.out.print('\u000C');
 
@@ -352,10 +352,6 @@ public class Menu{
 
             case 3: // consulta la lista de clientes
             Menu.menuGestionClientes();
-            break;
-            
-            case 4: // gestion de pedidos de clientes
-            // Menu.menuGestionarPedidosComercial
             break;
         }        
     }
@@ -392,34 +388,7 @@ public class Menu{
 
         }        
     }
-    public static void menuGestionPedidosComercial(){
-        System.out.print('\u000C');
-        PLN.out("LISTA DE PEDIDOS");
-        PLN.out("================\n");
-        PLN.out("ID logueado = " + ((Empleado)usuarioLogueado).getIdEmpleado());
-        //Controlador.verListaClientesComercial(((Empleado)usuarioLogueado).getIdEmpleado());
-        opciones.clear();
     
-        PLN.out("\n\nOpciones");
-        PLN.out("========");
-        opciones.add("\n0 = Volver al menú principal");
-    
-        eleccionUsuario = elegirOpcion();
-    
-        switch (eleccionUsuario) {
-            case 0: // regresamos al menú principal del jefe
-            System.out.print('\u000C');
-            menuJefe();
-            break;
-
-            case 1: // se crea un nuevo cliente
-            PLN.out("\n\nFormulario nuevo cliente");
-            PLN.out("========================");
-            Controlador.crearCliente(((Empleado)usuarioLogueado).getIdEmpleado());
-            break;   
-
-        }        
-    }
         
     // ******************************
     // *          ARTESANO          *
@@ -428,7 +397,7 @@ public class Menu{
     /**
      * Menú principal de opciones para el usuario Artesano
      */
-    public static void menuArtesano(){
+    private static void menuArtesano(){
         opciones.clear();
         System.out.print('\u000C');
 
@@ -460,20 +429,19 @@ public class Menu{
             menuLogin();
             break;
             
-            case 3: // gestiona la lista de pedidos asignados
-            
+            case 3: // gestiona la lista de pedidos asignados            
             menuGestionMueblesAsignados();
             break;
             
-            case 4: // consulta la lista de empleados
-            menuInformacionLaboral();
+            case 4: // consulta información de caracter laboral del artesano contratado por horas
+            // menuInformacionLaboral();
             break;
         }       
     }
     /**
      * Método que sirve para que el artesano gestione los pedidos que tiene asignados
      */
-    public static void menuGestionMueblesAsignados(){
+    private static void menuGestionMueblesAsignados(){
         Mueble mueble = null;
         ArrayList<Pedido> pedidos = Controlador.loadPedidos();
         
@@ -505,19 +473,19 @@ public class Menu{
             break;
             
             case "EN_CONSTRUCCION":
-            // menuMuebleEnConstruccion(mueble);
+            menuMuebleEnConstruccion(mueble);
             break;
             
             case "PAUSADO":
-            // menuMueblePausado(mueble);
+            menuMueblePausado(mueble);
             break;
             
             case "TERMINADO":
-            // menuMuebleTerminado(mueble);
+            menuMuebleTerminado(mueble);
             break;
             
             case "ENTREGADO":
-            // menuMuebleTerminado(mueble);
+            menuMuebleTerminado(mueble);
             break;
             
         }
@@ -544,6 +512,63 @@ public class Menu{
             break;
         }
     }
+    /**
+     * Menu de opciones sobre un mueble en estado EN_CONSTRUCCION
+     */
+    private static void menuMuebleEnConstruccion(Mueble mueble){
+        opciones.clear();
+        PLN.out("\nOpciones:");
+        PLN.out("---------");
+        opciones.add("\n0 = Volver al menú principal");
+        opciones.add("1 = Pausar construcción");
+        opciones.add("2 = Finalizar construcción");
+    
+        eleccionUsuario = elegirOpcion();
+        switch(eleccionUsuario){
+            case 0:
+            menuArtesano();
+            break;
+            
+            case 1:
+            Controlador.pausarConstruccionMueble(mueble.getNumSerie());
+            menuArtesano();
+            break;
+            
+            case 2:
+            Controlador.finalizarConstruccionMueble(mueble.getNumSerie());
+            menuArtesano();
+            break;
+        }
+    }
+    /**
+     * Menu de opciones sobre un mueble en estado PAUSADO
+     */
+    private static void menuMueblePausado(Mueble mueble){
+        opciones.clear();
+        PLN.out("\nOpciones:");
+        PLN.out("---------");
+        opciones.add("\n0 = Volver al menú principal");
+        opciones.add("1 = Reanudar construcción");
+    
+        eleccionUsuario = elegirOpcion();
+        switch(eleccionUsuario){
+            case 0:
+            menuArtesano();
+            break;
+            
+            case 1:
+            Controlador.reanudarConstruccionMueble(mueble.getNumSerie());
+            menuArtesano();
+            break;
+        }
+    }
+    /**
+     * Menu de opciones sobre un mueble en estado TERMINADO o ENTREGADO (no tiene opciones)
+     */
+    private static void menuMuebleTerminado(Mueble mueble){
+        tools.Herramientas.enterParaContinuar();
+        menuArtesano();
+    }
     
     // ******************************
     // *            CLIENTE         *
@@ -552,7 +577,7 @@ public class Menu{
     /**
      * Menú principal de opciones para el usuario Cliente
      */
-    public static void menuCliente(){
+    private static void menuCliente(){
         opciones.clear();
         System.out.print('\u000C');
         PLN.out("MENÚ PRINCIPAL");
@@ -620,7 +645,7 @@ public class Menu{
     /**
      * Método que gestiona la elección de opciones en los menús por parte del usuario.
      */
-    public static int elegirOpcion() {
+    private static int elegirOpcion() {
         for (String string : opciones) {
             PLN.out(string);
         }
@@ -652,7 +677,7 @@ public class Menu{
     /**
      * Método para que el usuario seleccione un número de pedido
      */
-    public static int seleccionarNumPedido() {        
+    private static int seleccionarNumPedido() {        
         int num = -1;
         ArrayList<Pedido> pedidos = Controlador.loadPedidos();        
         boolean allRight = false;
@@ -689,7 +714,7 @@ public class Menu{
     /**
      * Método para que el cliente seleccione un número de pedido (de uno de sus pedidos)
      */
-    public static int seleccionarNumPedidoCliente() {        
+    private static int seleccionarNumPedidoCliente() {        
         int num = -1;
         ArrayList<Pedido> pedidos = Controlador.loadPedidos();
         ArrayList<Pedido> pedidosCliente = new ArrayList<Pedido>();
@@ -728,7 +753,7 @@ public class Menu{
     /**
      * Método que permite que el cliente seleccione el nº de serie de uno de los muebles que tiene asignados
      */
-    public static int seleccionaMuebleAsignado(){
+    private static int seleccionaMuebleAsignado(){
         int num = -1;
         ArrayList<Pedido> pedidos = Controlador.loadPedidos();
         ArrayList<Mueble> muebles = new ArrayList<Mueble>();
