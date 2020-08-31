@@ -116,6 +116,12 @@ public class Menu{
             }
             if(!existeUsuario){
                     PLN.out("No existe usuario con ese nick. Inténtelo de nuevo.");
+            }else{
+                if(usuarioLogueado instanceof Empleado && ((Empleado)usuarioLogueado).getFechaBaja() != null){
+                    PLN.out("Este usuario ya no forma parte de la plantilla de empleados de la fábrica.");
+                    usuarioLogueado = null;
+                    existeUsuario = false;
+                }
             }
         }while(usuarioLogueado == null);
         selectMenu();
@@ -633,8 +639,9 @@ public class Menu{
         int numPedido = seleccionarNumPedidoCliente();
         if(numPedido != 0){
             Controlador.consultaListaMueblesPedido(numPedido, ((Cliente)usuarioLogueado).getIdCliente());     
-            tools.Herramientas.enterParaContinuar();
+            
         }
+        tools.Herramientas.enterParaContinuar();
         menuCliente();
     }
     
