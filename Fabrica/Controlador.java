@@ -368,8 +368,8 @@ import pedidos.*;
                             auxMueble.setArtesano((Artesano)auxPersona);
                             auxMueble.setEstado(Mueble.Estado.ASIGNADO);
                             auxMueble.setAnotaciones(
-                            new Date() +
-                            "\n\tAsignada la construcción al artesano " + ((Artesano)auxPersona).getNombre() + " " + ((Artesano)auxPersona).getApellidos());
+                            "\n" + new Date() +
+                            "\n\tAsignada la construcción al artesano " + ((Artesano)auxPersona).getNombre() + " " + ((Artesano)auxPersona).getApellidos() + "\n");
                             PLN.out("Se ha asignado el mueble con nº de serie " + auxMueble.getNumSerie() + 
                                 " al artesano " + ((Artesano)auxPersona).getNombre() + " " + ((Artesano)auxPersona).getApellidos());
                         }
