@@ -3,6 +3,9 @@ package fabrica;
 import personas.Persona;
 import personas.Cliente;
 import personas.Empleado;
+import personas.Artesano;
+import personas.ArtesanoPorHoras;
+import personas.ArtesanoEnPlantilla;
 import pedidos.Pedido;
 import muebles.Mueble;
 import java.util.ArrayList;
@@ -44,11 +47,11 @@ public class Menu{
     private static void selectMenu(){
         switch(usuarioLogueado.getClass().getSimpleName()){
             case "ArtesanoPorHoras":
-            PLN.out("Te has logueado como Artesano por horas");
+            menuArtesano();
             break;
             
             case "ArtesanoEnPlantilla":
-            PLN.out("Te has logueado como Artesano en plantilla");
+            menuArtesano();
             break;
             
             case "Jefe":
@@ -60,11 +63,7 @@ public class Menu{
             break;
             
             case "Artesano":
-            PLN.out("Te has logueado como Artesano");
-            break;
-            
-            case "Empleado":
-            PLN.out("Te has logueado como Empleado");
+            menuArtesano();
             break;
             
             case "ClienteEmpresa":
@@ -77,10 +76,6 @@ public class Menu{
             
             case "Cliente":
             menuCliente();
-            break;
-            
-            case "Persona":
-            PLN.out("Te has logueado como Persona");
             break;
             
             default:
@@ -163,11 +158,11 @@ public class Menu{
             menuLogin();
             break;
             
-            case 3: // consulta la lista de empleados
+            case 3: // gestiona la lista de empleados
             Menu.menuGestionEmpleados();
             break;
             
-            case 4: // consulta la lista de empleados
+            case 4: // gestiona la lista de pedidos
             Menu.menuGestionPedidosJefe();
             break;
         }        
@@ -394,6 +389,126 @@ public class Menu{
         }        
     }
     
+        
+    // ******************************
+    // *          ARTESANO          *
+    // ******************************    
+    
+    /**
+     * Menú principal de opciones para el usuario Artesano
+     */
+    public static void menuArtesano(){
+        opciones.clear();
+        System.out.print('\u000C');
+
+        PLN.out("MENÚ PRINCIPAL");
+        PLN.out("==============");
+        opciones.add("\n0 = Salir de la aplicación");
+        opciones.add("1 = Cerrar sesión");
+        opciones.add("2 = Perfil");
+        opciones.add("3 = Gestión de pedidos");
+        if(usuarioLogueado instanceof ArtesanoPorHoras){
+            opciones.add("4 = Información laboral");
+        }
+    
+        eleccionUsuario = elegirOpcion();
+    
+        switch (eleccionUsuario) {
+            
+            case 0: // el programa se cierra
+            System.out.print('\u000C');
+            PLN.out("Ha elegido finalizar el programa");
+            PLN.out("Hasta pronto");
+            PLN.out("\nPrograma finalizado");
+            System.exit(0);
+            break;
+                      
+            case 1: // cierra sesión y regresa al login
+            usuarioLogueado = null;
+            System.out.print('\u000C');
+            menuLogin();
+            break;
+            
+            case 3: // gestiona la lista de pedidos asignados
+            
+            menuGestionMueblesAsignados();
+            break;
+            
+            case 4: // consulta la lista de empleados
+            // menuInformacionLaboral();
+            break;
+        }       
+    }
+    /**
+     * Método que sirve para que el artesano gestione los pedidos que tiene asignados
+     */
+    public static void menuGestionMueblesAsignados(){
+        Mueble mueble = null;
+        ArrayList<Pedido> pedidos = Controlador.loadPedidos();
+        
+        System.out.print('\u000C');
+
+        PLN.out("MUEBLES ASIGNADOS");
+        PLN.out("=================");
+        Controlador.listaPedidosAsignados(((Empleado)usuarioLogueado).getIdEmpleado());
+        int numSerie = seleccionaMuebleAsignado();
+        if(numSerie == 0){
+            menuArtesano();
+        }else{
+            for(Pedido auxPedido : pedidos){
+                for(Mueble auxMueble : auxPedido.getMuebles()){
+                    if(auxMueble.getNumSerie() == numSerie){
+                        mueble = auxMueble;
+                        break;
+                    }
+                }
+                if(mueble!=null){
+                    break;
+                }
+            }                   
+        }
+        switch(String.valueOf(mueble.getEstado())){
+            
+            case "ASIGNADO":
+            menuMuebleAsignado(mueble);
+            break;
+            
+            case "EN_CONSTRUCCION":
+            // menuMuebleEnConstruccion(mueble);
+            break;
+            
+            case "PAUSADO":
+            // menuMueblePausado(mueble);
+            break;
+            
+            case "TERMINADO":
+            // menuMuebleTerminado(mueble);
+            break;
+            
+            case "ENTREGADO":
+            // menuMuebleTerminado(mueble);
+            break;
+            
+        }
+    }
+    /**
+     * Menu de opciones sobre un mueble en estado ASIGNADO
+     */
+    private static void menuMuebleAsignado(Mueble mueble){
+        opciones.clear();
+        PLN.out("\nOpciones:");
+        PLN.out("---------");
+        opciones.add("\n0 = Volver al menú principal");
+        opciones.add("1 = Iniciar construcción");
+    
+        eleccionUsuario = elegirOpcion();
+        switch(eleccionUsuario){
+            case 0:
+            menuArtesano();
+            break;
+        }
+    }
+    
     // ******************************
     // *            CLIENTE         *
     // ******************************    
@@ -574,5 +689,48 @@ public class Menu{
         } while (!allRight);
         return num;
     } 
-   
+    /**
+     * Método que permite que el cliente seleccione el nº de serie de uno de los muebles que tiene asignados
+     */
+    public static int seleccionaMuebleAsignado(){
+        int num = -1;
+        ArrayList<Pedido> pedidos = Controlador.loadPedidos();
+        ArrayList<Mueble> muebles = new ArrayList<Mueble>();
+        boolean allRight = false;
+        
+        for(Pedido auxPedido : pedidos){
+            for(Mueble auxMueble : auxPedido.getMuebles()){
+                if(auxMueble.getArtesano().getIdEmpleado() == ((Artesano)usuarioLogueado).getIdEmpleado()){
+                    muebles.add(auxMueble);
+                } else{
+                    break;
+                }
+            }
+        }        
+        P.out("Indique nº de serie (0 = Regresar): ");
+        do {           
+            try {
+                num = scanner.nextInt();
+                scanner.nextLine(); // limpia pulsaciones residuales de cara a posibles sucesiones.
+                if (num == 0){                   
+                    allRight = true;
+                }else{
+                    for (Mueble auxMueble : muebles){
+                        if (num == auxMueble.getNumSerie()){
+                            allRight = true;
+                        }
+                    }
+                }
+            } catch (Exception e) {
+                scanner.nextLine();
+            }
+            if(!allRight) {
+                PLN.out("No tiene ningún pedido con ese id.");
+                P.out("Indique otro Id: ");
+                num = -1;
+            }
+        } while (!allRight);
+        return num;
+    }
+        
 }
