@@ -194,6 +194,28 @@ public class Tabla{
         return formatearTabla(listas) + "\n";
     }
     /**
+     * Método que imprime una tabla con la lista de pedidos asignados al artesano
+     */
+    public static String listaMueblesAsignados(ArrayList<Pedido> pedidos){
+        List<List<String>> listas = new ArrayList<>();
+        List<String> headers = Arrays.asList("Nº SERIE", "NºPEDIDO", "CLIENTE", "ESTADO"); // cabecera
+        List<String> separators = Arrays.asList("--------", "--------", "-------", "------");
+        listas.add(headers);
+        listas.add(separators);
+        String artesano = "";
+        DecimalFormat decimalFormat = new DecimalFormat("#.00"); // esta instrucción hará que se muestren los datos tipo double con dos decimales
+        for (Pedido auxPedido : pedidos) {
+            for(Mueble auxMueble : auxPedido.getMuebles()){   
+                listas.add((List<String>) Arrays.asList(
+                    String.valueOf(auxMueble.getNumSerie()),
+                    String.valueOf(auxPedido.getNumPedido()),
+                    auxPedido.getCliente().getNombre() + " " + auxPedido.getCliente().getApellidos(),
+                    String.valueOf(auxMueble.getEstado()))); 
+            }              
+        }
+        return formatearTabla(listas) + "\n";
+    }
+    /**
      * Método que imprime una tabla con los muebles de un pedido
      */
     public static String listaMueblesPedido(ArrayList<Mueble> muebles){

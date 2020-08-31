@@ -366,6 +366,7 @@ import pedidos.*;
                     if(((Artesano)auxPersona).getIdEmpleado() == idArtesano){
                         for(Mueble auxMueble : pedido.getMuebles()){
                             auxMueble.setArtesano((Artesano)auxPersona);
+                            auxMueble.setEstado(Mueble.Estado.ASIGNADO);
                             auxMueble.setAnotaciones(
                             new Date() +
                             "\n\tAsignada la construcción al artesano " + ((Artesano)auxPersona).getNombre() + " " + ((Artesano)auxPersona).getApellidos());
@@ -545,6 +546,31 @@ import pedidos.*;
             }
         } while (!right);        
         return valor;
+    }
+    
+                // ********** Menu Artesano **********
+                
+    /**
+     * Método que muestra la lista de pedidos que tiene asignado el artesano cuyo id se pasa como argumento
+     */
+    public static void listaPedidosAsignados(int idArtesano){
+        ArrayList<Persona> personas = loadPersonas();
+        ArrayList<Pedido> pedidos = loadPedidos();
+        ArrayList<Pedido> pedidosAsignados = new ArrayList<Pedido>();
+        boolean tienePedidosAsignados = false;
+        // comprobamos los pedidos asignados al usuario y los añadimos a un arraylist
+        for(Pedido auxPedido : pedidos){
+            for(Mueble auxMueble : auxPedido.getMuebles()){
+                if(auxMueble.getArtesano() != null && auxMueble.getArtesano().getIdEmpleado() == idArtesano){
+                    pedidosAsignados.add(auxPedido);
+                    break;
+                }
+            }
+        }        
+        if(pedidosAsignados.size() != 0){
+            tienePedidosAsignados = true;
+            PLN.out(tools.Tabla.listaMueblesAsignados(pedidosAsignados));
+        }      
     }
         
                 // ********** Menu cliente **********
