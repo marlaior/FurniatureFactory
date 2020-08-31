@@ -168,8 +168,8 @@ public class Menu{
             break;
             
             case 4: // consulta la lista de empleados
-               Menu.menuGestionPedidosJefe();
-               break;
+            Menu.menuGestionPedidosJefe();
+            break;
         }        
     }
     /**
@@ -177,11 +177,13 @@ public class Menu{
      */
     private static void menuGestionPedidosJefe(){
         opciones.clear();
+        int numPedido = 0;
         System.out.print('\u000C');
         PLN.out("GESTIÓN DE PEDIDOS");
         PLN.out("==================");
         opciones.add("\n0 = Regresar al menú principal");
-        opciones.add("1 = Consulta lista completa de pedidos");        
+        opciones.add("1 = Consultar lista de pedidos");    
+        opciones.add("2 = Asignar pedidos"); 
         eleccionUsuario = elegirOpcion();        
         switch (eleccionUsuario) {                        
             case 0: // regresamos al menú principal
@@ -194,17 +196,40 @@ public class Menu{
             PLN.out("LISTA COMPLETA DE PEDIDOS");
             PLN.out("=========================");
             if(Controlador.verListaCompletaPedidos()){
-                int numPedido = seleccionarNumPedido();
+                numPedido = seleccionarNumPedido();
                 if(numPedido == 0){
-                    menuJefe();
+                    menuGestionPedidosJefe();
                 }else{
                     menuListaCompletaPedidos(numPedido);
                 }
             }else{
                 PLN.out("\nLa fábrica todavía no ha recibido ningún pedido");
                 tools.Herramientas.enterParaContinuar();
-                menuJefe();
+                menuGestionPedidosJefe();
             }
+            break;
+            
+            case 2: // Se muestra la lista de pedidos no asignados y se da la opción de asignarlos a artesanos de la fábrica
+            System.out.print('\u000C');
+            PLN.out("LISTA DE PEDIDOS PENDIENTES DE ASIGNAR");
+            PLN.out("======================================");
+            if(Controlador.verListaPedidosNoAsignados()){
+                PLN.out("\nLISTA DE ARTESANOS");
+                PLN.out("==================");
+                Controlador.listaArtesanos();                
+                PLN.out("------------------");
+                numPedido = seleccionarNumPedido();
+                if(numPedido == 0){
+                    menuGestionPedidosJefe();
+                }else{
+                    Controlador.asignarPedido(numPedido);
+                    menuGestionPedidosJefe();
+                }
+            }else{
+                PLN.out("\nNo hay ningún pedido sin asignar.");
+                tools.Herramientas.enterParaContinuar();
+                menuGestionPedidosJefe();
+            }            
             break;
         }
     }

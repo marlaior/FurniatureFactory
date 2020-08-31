@@ -320,6 +320,79 @@ import pedidos.*;
         return tienePedidos;            
     }
     /**
+     * Método que imprime la lista de pedidos no asignados a ningún artesano (todos sus muebles estarán en estado PENDIENTE)
+     */
+    public static boolean verListaPedidosNoAsignados(){
+        boolean tienePedidos = false;
+        ArrayList<Pedido> pedidos = loadPedidos();
+        ArrayList<Pedido> pedidosNoAsignados = new ArrayList<Pedido>();
+        ArrayList<Mueble> muebles = new ArrayList<Mueble>();
+        for (Pedido auxPedido : pedidos){
+            muebles = auxPedido.getMuebles();
+            for(Mueble auxMueble : muebles){
+                if(auxMueble.getEstado().equals(Mueble.Estado.PENDIENTE)){
+                    pedidosNoAsignados.add(auxPedido);
+                }
+                break; // basta con consultar el estado de un solo mueble del pedido.
+            }           
+        }
+        if(pedidosNoAsignados.size() != 0){
+            PLN.out(tools.Tabla.listaPedidosJefe(pedidosNoAsignados));
+            tienePedidos = true;
+        }
+        return tienePedidos;            
+    }
+    /**
+     * Método que permite asignar la construcción de todos los muebles de un pedido a un artesano
+     */
+    public static void asignarPedido(int numPedido){
+        ArrayList<Pedido> pedidos = loadPedidos();
+        ArrayList<Persona> personas = loadPersonas();
+        Pedido pedido = null;
+        Artesano artesano = null;
+        int idArtesano = 0;
+        for(Pedido auxPedido : pedidos){
+            if(auxPedido.getNumPedido() == numPedido){
+                pedido = auxPedido;
+                break;
+            }
+        }
+        if(pedido == null){
+            PLN.out("No se han podido cargar los datos del pedido nº" + numPedido);            
+        }else{
+            idArtesano = seleccionarArtesano();
+            for(Persona auxPersona : personas){
+                if(auxPersona instanceof Artesano){
+                    if(((Artesano)auxPersona).getIdEmpleado() == idArtesano){
+                        for(Mueble auxMueble : pedido.getMuebles()){
+                            auxMueble.setArtesano((Artesano)auxPersona);
+                            auxMueble.setAnotaciones(
+                            new Date() +
+                            "\n\tAsignada la construcción al artesano " + ((Artesano)auxPersona).getNombre() + " " + ((Artesano)auxPersona).getApellidos());
+                            PLN.out("Se ha asignado el mueble con nº de serie " + auxMueble.getNumSerie() + 
+                                " al artesano " + ((Artesano)auxPersona).getNombre() + " " + ((Artesano)auxPersona).getApellidos());
+                        }
+                    }
+                }
+            } 
+            savePedidos(pedidos);           
+        }
+        tools.Herramientas.enterParaContinuar();                
+    }
+    /**
+     * Método que imprime la lista completa de artesanos que trabajan para la fábrica
+     */
+    public static void listaArtesanos(){
+        ArrayList<Persona> personas = loadPersonas();
+        ArrayList<Artesano> artesanos = new ArrayList<Artesano>();
+        for(Persona auxPersona : personas){
+            if(auxPersona instanceof Artesano){
+                artesanos.add((Artesano)auxPersona);
+            }
+        }
+        PLN.out(tools.Tabla.listaArtesanos(artesanos));
+    }
+    /**
      * Método que imprime la lista de muebles de un pedido pasado por parámetro
      */
     public static void listaMueblesPedido(Pedido pedido){
@@ -750,6 +823,12 @@ import pedidos.*;
      */
     public static int seleccionarIdEmpleado() {        
         ArrayList<Persona> personas = loadPersonas();
+        ArrayList<Empleado> empleados = new ArrayList<Empleado>();
+        for(Persona auxPersona : personas){
+            if(auxPersona instanceof Empleado){
+                empleados.add((Empleado)auxPersona);
+            }
+        }
         int id = -1;
         boolean allRight = false;
         P.out("Indique el id del empleado: ");
@@ -758,22 +837,57 @@ import pedidos.*;
                 id = scanner.nextInt();
                 scanner.nextLine(); // limpia pulsaciones residuales de cara a posibles sucesiones.
                 PLN.out("id = "+id);
-                if (id < 0) {
-                    PLN.out("No existen Ids negativos");
-                } else {                   
-                    allRight = true;
+                for(Empleado auxEmpleado : empleados){
+                    if(id == auxEmpleado.getIdEmpleado()){                  
+                        allRight = true;
+                    }
                 }
             } catch (Exception e) {
-                PLN.out("Valor incorrecto.");
                 id = -1;
                 scanner.nextLine();
             }
             if(!allRight) {
+                PLN.out("No hay ningún empleado con ese id.");
                 P.out("Indique otro Id: ");
             }
         } while (!allRight);
         return id;
     }    
+        /**
+     * Método para que el usuario indique un id de empleado
+     */
+    public static int seleccionarArtesano() {        
+        ArrayList<Persona> personas = loadPersonas();
+        ArrayList<Artesano> artesanos = new ArrayList<Artesano>();
+        for(Persona auxPersona : personas){
+            if(auxPersona instanceof Artesano){
+                artesanos.add((Artesano)auxPersona);
+            }
+        }
+        int id = -1;
+        boolean allRight = false;
+        P.out("Indique el id del artesano para asignarle el pedido: ");
+        do {           
+            try {
+                id = scanner.nextInt();
+                scanner.nextLine(); // limpia pulsaciones residuales de cara a posibles sucesiones.
+                PLN.out("id = "+id);      
+                for(Artesano auxArtesano : artesanos){
+                    if(id == auxArtesano.getIdEmpleado()){                            
+                        allRight = true;
+                    }
+                }                
+            } catch (Exception e) {
+                id = -1;
+                scanner.nextLine();
+            }
+            if(!allRight) {
+                PLN.out("No hay ningún artesano con ese id.");
+                P.out("Indique otro Id: ");
+            }
+        } while (!allRight);
+        return id;
+    }  
     /**
      * Método para que el usuario indique un id de mueble
      */

@@ -14,7 +14,7 @@ public class Herramientas{
     private static final Scanner scanner = new Scanner(System.in);
     
     public static void enterParaContinuar(){
-        P.out("Pulse Enter para continuar");
+        P.out("\nPulse Enter para continuar");
         scanner.nextLine();        
     }
     
@@ -26,7 +26,7 @@ public class Herramientas{
         boolean allRight = false;
         boolean retorno = false;
         do{
-            P.out("¿Está seguro? (Y/n) ");
+            P.out("\n¿Está seguro? (Y/n) ");
             String respuesta = scanner.nextLine();
             if(respuesta.equals("Y")){
                 retorno = true;
