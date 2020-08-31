@@ -399,7 +399,33 @@ import pedidos.*;
     public static void listaMueblesPedido(Pedido pedido){
         ArrayList<Mueble> mueble = pedido.getMuebles();
         PLN.out(tools.Tabla.listaMueblesPedido(mueble));
-    }        
+    }  
+    /**
+     * Método que inicia la construccion del mueble cuyo id se pasa por parametro
+     */
+    public static void iniciarConstruccionMueble(int numSerie){
+        ArrayList<Pedido> pedidos = loadPedidos();
+        boolean muebleIniciado = false;
+        for(Pedido auxPedido : pedidos){
+            for(Mueble auxMueble : auxPedido.getMuebles()){
+                if(auxMueble.getNumSerie() == numSerie){
+                    auxMueble.setEstado(Mueble.Estado.EN_CONSTRUCCION);
+                    auxMueble.setAnotaciones(
+                        new Date() +
+                        "\n\t" + auxMueble.getArtesano().getNombre() + " " + auxMueble.getArtesano().getApellidos() + " inició la construcción."
+                    );
+                    muebleIniciado = true;
+                    PLN.out("Se ha iniciado la construcción del mueble con nº de serie " + auxMueble.getNumSerie());
+                    tools.Herramientas.enterParaContinuar();
+                    savePedidos(pedidos);
+                    break;
+                }
+            }
+            if(muebleIniciado){ // si ya se ha encontrado e iniciado el mueble que buscamos, salimos del bucle-
+                break;
+            }
+        }
+    }
         
             // ********** Menu Comercial **********
         

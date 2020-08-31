@@ -506,6 +506,11 @@ public class Menu{
             case 0:
             menuArtesano();
             break;
+            
+            case 1:
+            Controlador.iniciarConstruccionMueble(mueble.getNumSerie());
+            menuArtesano();
+            break;
         }
     }
     
@@ -700,7 +705,7 @@ public class Menu{
         
         for(Pedido auxPedido : pedidos){
             for(Mueble auxMueble : auxPedido.getMuebles()){
-                if(auxMueble.getArtesano().getIdEmpleado() == ((Artesano)usuarioLogueado).getIdEmpleado()){
+                if(auxMueble.getArtesano() != null && auxMueble.getArtesano().getIdEmpleado() == ((Artesano)usuarioLogueado).getIdEmpleado()){
                     muebles.add(auxMueble);
                 } else{
                     break;
