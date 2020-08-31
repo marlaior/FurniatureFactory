@@ -164,30 +164,21 @@ public class Tabla{
         List<String> separators = Arrays.asList("---------", "------");
         listas.add(headers);
         listas.add(separators);
-        String estado = "EN PROCESO";
-        int terminado;
-        int pendiente;
+        String estado = "TERMINADO";
         for (Pedido auxPedido : pedidos) {
-            terminado = 0;
-            pendiente = 0;
+            
             for(Mueble auxMueble : auxPedido.getMuebles()){
-    
+                estado = "TERMINADO";
                 if(auxMueble.getEstado().equals(Mueble.Estado.ENTREGADO)){
                     estado = "ENTREGADO";
                     break;
-                }else if(auxMueble.getEstado().equals(Mueble.Estado.TERMINADO)){
-                    terminado++;
-                }else if(auxMueble.getEstado().equals(Mueble.Estado.PENDIENTE)){
-                    pendiente++;
+                }else if(auxMueble.getEstado().equals(Mueble.Estado.PENDIENTE)
+                    || auxMueble.getEstado().equals(Mueble.Estado.ASIGNADO)
+                    || auxMueble.getEstado().equals(Mueble.Estado.EN_CONSTRUCCION)
+                    || auxMueble.getEstado().equals(Mueble.Estado.PAUSADO)){
+                    estado = "EN PROCESO";
+                    break;
                 }
-            }
-            if (estado.equals("ENTREGADO")){}
-            else if(terminado == auxPedido.getMuebles().size()){
-                estado = "TERMINADO";
-            }else if(pendiente == auxPedido.getMuebles().size()){
-                estado = "PENDIENTE";
-            }else {
-                estado = "EN PROCESO";
             }
             listas.add((List<String>) Arrays.asList(""+auxPedido.getNumPedido(), estado));          
         }
@@ -248,33 +239,28 @@ public class Tabla{
         List<String> separators = Arrays.asList("---------", "-------", "--------", "------", "-------");
         listas.add(headers);
         listas.add(separators);
-        String estado = "EN PROCESO";
-        int terminado;
-        int pendiente;
+        String estado = "TERMINADO";
         double importeTotal = 0;
         String artesano = "";
         DecimalFormat decimalFormat = new DecimalFormat("#.00"); // esta instrucción hará que se muestren los datos tipo double con dos decimales
         for (Pedido auxPedido : pedidos) {
-            terminado = 0;
-            pendiente = 0;
+            estado = "TERMINADO";
             for(Mueble auxMueble : auxPedido.getMuebles()){    
-                if(auxMueble.getArtesano() == null){
+                if(auxMueble.getEstado().equals(Mueble.Estado.PENDIENTE)){
                     estado = "SIN ASIGNAR";
-                    artesano = "";    
+                    artesano = ""; 
+                }else if(auxMueble.getEstado().equals(Mueble.Estado.EN_CONSTRUCCION) 
+                    || (auxMueble.getEstado().equals(Mueble.Estado.PAUSADO))
+                    || (auxMueble.getEstado().equals(Mueble.Estado.ASIGNADO))){
+                    artesano = auxMueble.getArtesano().getNombre() + " " + auxMueble.getArtesano().getApellidos();
+                    estado = "ASIGNADO";
                 }else{
                     artesano = auxMueble.getArtesano().getNombre() + " " + auxMueble.getArtesano().getApellidos();
-                    if(auxMueble.getEstado().equals(Mueble.Estado.TERMINADO) || auxMueble.getEstado().equals(Mueble.Estado.ENTREGADO)){
-                        terminado++;
-                    }
-                }    
+                }
                 importeTotal += auxMueble.getPrecio();
+
             }
-            if (estado.equals("SIN ASIGNAR")){}
-            else if(terminado == auxPedido.getMuebles().size()){
-                estado = "TERMINADO";
-            }else {
-                estado = "ASIGNADO";
-            }
+
             listas.add((List<String>) Arrays.asList(
                 String.valueOf(auxPedido.getNumPedido()),
                 auxPedido.getCliente().getNombre() + " " + auxPedido.getCliente().getApellidos(),
